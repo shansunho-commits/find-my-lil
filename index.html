@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#56C6F7">
+  <meta name="description" content="성인 흡연자를 위한 릴 스틱 취향 추천 웹앱 Find My LIL">
+  <title>Find My LIL</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <noscript class="noscript">이 서비스를 이용하려면 JavaScript를 활성화해 주세요.</noscript>
+
+  <div class="app-shell">
+    <div class="ambient ambient--one" aria-hidden="true"></div>
+    <div class="ambient ambient--two" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <button id="backButton" class="icon-button" type="button" aria-label="이전 질문" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M15 18l-6-6 6-6"></path>
+        </svg>
+      </button>
+
+      <button id="logoButton" class="logo-button" type="button" aria-label="첫 화면으로 이동">
+        <span>Find My</span><strong>LIL</strong>
+      </button>
+
+      <div class="topbar-spacer"></div>
+    </header>
+
+    <section id="progressSection" class="progress-section" hidden>
+      <div class="progress-meta">
+        <span id="progressStep">TASTE MATCHING</span>
+        <strong id="progressText">10%</strong>
+      </div>
+      <div
+        id="progressTrack"
+        class="progress-track"
+        role="progressbar"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="10"
+      >
+        <div id="progressBar" class="progress-bar"></div>
+      </div>
+    </section>
+
+    <main id="appMain" class="app-main">
+      <section id="startScreen" class="screen screen--active start-screen">
+        <div class="hero">
+          <div class="hero-mark" aria-hidden="true">
+            <div class="hero-mark__ring"></div>
+            <div class="hero-mark__core">lil</div>
+          </div>
+
+          <p class="eyebrow">PREMIUM TASTE MATCHING</p>
+          <h1>
+            <span>Find My LIL</span>
+            30초 만에<br>
+            나에게 맞는 릴 스틱을<br>
+            찾아보세요.
+          </h1>
+          <p class="hero-description">
+            몇 가지 취향 질문을 바탕으로<br>
+            어울리는 제품을 안내해 드립니다.
+          </p>
+
+          <div class="duration-pill">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="8"></circle>
+              <path d="M12 7.5v5l3 1.8"></path>
+            </svg>
+            약 30초 소요
+          </div>
+        </div>
+
+        <div class="start-actions">
+          <label class="age-check">
+            <input id="adultCheckbox" type="checkbox">
+            <span class="custom-check">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4 4L19 7"></path></svg>
+            </span>
+            <span>만 19세 이상 성인 흡연자입니다.</span>
+          </label>
+
+          <p id="ageError" class="form-error" hidden>성인 여부를 확인해 주세요.</p>
+
+          <button id="startButton" class="primary-button" type="button">
+            시작하기
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+          </button>
+
+          <p class="warning">
+            흡연은 건강에 해롭습니다. 본 콘텐츠는 성인 흡연자를 위한 제품 취향 안내입니다.
+          </p>
+        </div>
+      </section>
+
+      <section id="questionScreen" class="screen question-screen" hidden>
+        <article class="question-card">
+          <div class="question-heading">
+            <span id="questionNumber" class="question-number">Q1</span>
+            <span id="questionCategory" class="question-category">현재 이용 제품</span>
+          </div>
+
+          <h2 id="questionTitle">현재 사용 중인 제품은?</h2>
+          <p id="questionDescription">가장 자주 사용하는 제품 한 가지를 선택해 주세요.</p>
+
+          <div id="answerList" class="answer-list" role="group" aria-labelledby="questionTitle"></div>
+        </article>
+
+        <p class="answer-guide">선택하면 다음 질문으로 자동 이동합니다.</p>
+      </section>
+
+      <section id="analysisScreen" class="screen analysis-screen" hidden>
+        <div class="analysis-visual" aria-hidden="true">
+          <div class="orbit orbit--outer"><span></span></div>
+          <div class="orbit orbit--inner"><span></span></div>
+          <div class="analysis-core">lil</div>
+        </div>
+
+        <p class="eyebrow">PERSONAL TASTE ANALYSIS</p>
+        <h2>분석 중...</h2>
+        <p>회원님께 가장 잘 맞는<br>릴 스틱을 찾고 있습니다.</p>
+
+        <div class="loading-dots" aria-label="분석 진행 중">
+          <span></span><span></span><span></span>
+        </div>
+      </section>
+
+      <section id="resultScreen" class="screen result-screen" hidden>
+        <div class="result-intro">
+          <div class="complete-icon">
+            <svg viewBox="0 0 64 64" aria-hidden="true">
+              <circle cx="32" cy="32" r="25"></circle>
+              <path d="M20 33l8 8 17-19"></path>
+            </svg>
+          </div>
+          <p>🎉 분석 완료</p>
+          <h2>회원님의 릴 스틱 추천 TOP 3</h2>
+          <span>선택한 답변을 바탕으로 취향에 가까운 제품을 순서대로 안내합니다.</span>
+        </div>
+
+        <section class="top-match-section" aria-labelledby="topMatchTitle">
+          <div class="section-title section-title--result">
+            <span>✦</span>
+            <h3 id="topMatchTitle">추천 릴 스틱</h3>
+          </div>
+          <div id="recommendationList" class="recommendation-list"></div>
+        </section>
+
+        <section class="coupon-section">
+          <div class="coupon-icon" aria-hidden="true">🎁</div>
+          <div class="coupon-copy">
+            <p>릴 기기 할인 혜택</p>
+            <h3>릴 기기 할인 혜택을 받아보세요</h3>
+            <span id="deviceBenefitText">릴 기기 할인 혜택을 직원에게 안내받아 보세요.</span>
+          </div>
+          <button id="couponButton" class="coupon-button" type="button">
+            직원에게 화면 보여주기
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+          </button>
+        </section>
+
+        <button id="restartButton" class="secondary-button" type="button">
+          다시 테스트하기
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20 11a8 8 0 10-2.3 5.7"></path>
+            <path d="M20 5v6h-6"></path>
+          </svg>
+        </button>
+
+        <p class="result-warning">
+          본 결과는 입력한 취향을 기반으로 한 제품 안내이며 실제 만족도는 개인에 따라 다를 수 있습니다.
+          흡연은 건강에 해롭습니다.
+        </p>
+      </section>
+    </main>
+
+    <div id="couponModal" class="coupon-modal" hidden>
+      <div class="coupon-modal__backdrop" data-close-coupon></div>
+      <section class="coupon-modal__sheet" role="dialog" aria-modal="true" aria-labelledby="couponModalTitle">
+        <button id="couponCloseButton" class="coupon-close" type="button" aria-label="닫기">×</button>
+        <div class="staff-badge">STAFF</div>
+        <p class="coupon-modal__eyebrow">직원에게 이 화면을 보여주세요.</p>
+        <h2 id="couponModalTitle">릴 기기 할인 혜택을<br>안내받고 싶어요.</h2>
+        <div class="staff-message">
+          <span>고객 요청</span>
+          <strong>릴 기기 할인 혜택 안내</strong>
+        </div>
+        <p class="coupon-modal__help">직원에게 이 화면을 보여주세요..</p>
+        <button id="couponDoneButton" class="primary-button coupon-done" type="button">확인</button>
+      </section>
+    </div>
+
+    <div class="home-indicator" aria-hidden="true"></div>
+    <div id="liveRegion" class="sr-only" aria-live="polite"></div>
+  </div>
+</body>
+</html>
