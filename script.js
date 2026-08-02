@@ -294,8 +294,239 @@
     visibilityButton:$("staffPasswordVisibilityButton")
   };
 
+  const analyticsEls = {
+    trigger:$("analyticsTrigger"),
+    passwordModal:$("analyticsPasswordModal"),
+    passwordForm:$("analyticsPasswordForm"),
+    passwordInput:$("analyticsPasswordInput"),
+    passwordError:$("analyticsPasswordError"),
+    passwordClose:$("analyticsPasswordClose"),
+    dashboardModal:$("analyticsDashboardModal"),
+    dashboardClose:$("analyticsDashboardClose"),
+    totalCount:$("analyticsTotalCount"),
+    deviceCount:$("analyticsDeviceCount"),
+    deviceRate:$("analyticsDeviceRate"),
+    stickCount:$("analyticsStickCount"),
+    stickRate:$("analyticsStickRate"),
+    deviceBars:$("analyticsDeviceBars"),
+    topCurrent:$("analyticsTopCurrent"),
+    topFlavor:$("analyticsTopFlavor"),
+    topStick:$("analyticsTopStick"),
+    staffOpenCount:$("analyticsStaffOpenCount"),
+    lastCompleted:$("analyticsLastCompleted"),
+    csvButton:$("analyticsCsvButton"),
+    resetButton:$("analyticsResetButton")
+  };
+
+  const ANALYTICS_STORAGE_KEY = "findMyLilAnalyticsV1";
+  let analyticsTapCount = 0;
+  let analyticsTapTimer = null;
+
+
   let lastStaffPayload = null;
 
+
+  function getEmptyAnalyticsData() {
+    return {
+      version: 1,
+      records: [],
+      staffOpenCount: 0
+    };
+  }
+
+  function loadAnalyticsData() {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(ANALYTICS_STORAGE_KEY) || "null");
+      if (!parsed || !Array.isArray(parsed.records)) return getEmptyAnalyticsData();
+      return {
+        version: 1,
+        records: parsed.records,
+        staffOpenCount: Number(parsed.staffOpenCount || 0)
+      };
+    } catch (_) {
+      return getEmptyAnalyticsData();
+    }
+  }
+
+  function saveAnalyticsData(data) {
+    try {
+      localStorage.setItem(ANALYTICS_STORAGE_KEY, JSON.stringify(data));
+    } catch (_) {}
+  }
+
+  function addAnalyticsRecord(record) {
+    const data = loadAnalyticsData();
+    data.records.push({
+      id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      completedAt: new Date().toISOString(),
+      ...record
+    });
+    saveAnalyticsData(data);
+  }
+
+  function increaseStaffOpenCount() {
+    const data = loadAnalyticsData();
+    data.staffOpenCount += 1;
+    saveAnalyticsData(data);
+  }
+
+  function countValues(records, key) {
+    return records.reduce((acc, record) => {
+      const value = record[key];
+      if (!value) return acc;
+      acc[value] = (acc[value] || 0) + 1;
+      return acc;
+    }, {});
+  }
+
+  function getTopValue(records, key) {
+    const counts = countValues(records, key);
+    const entries = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+    if (!entries.length) return "데이터 없음";
+    return `${entries[0][0]} · ${entries[0][1]}명`;
+  }
+
+  function percent(count, total) {
+    return total > 0 ? Math.round((count / total) * 100) : 0;
+  }
+
+  function openAnalyticsPassword() {
+    analyticsEls.passwordInput.value = "";
+    analyticsEls.passwordError.hidden = true;
+    analyticsEls.passwordModal.hidden = false;
+    document.body.classList.add("modal-open");
+    setTimeout(() => analyticsEls.passwordInput.focus(), 80);
+  }
+
+  function closeAnalyticsPassword() {
+    analyticsEls.passwordModal.hidden = true;
+    analyticsEls.passwordInput.value = "";
+    analyticsEls.passwordError.hidden = true;
+    document.body.classList.remove("modal-open");
+  }
+
+  function verifyAnalyticsPassword(event) {
+    event.preventDefault();
+    if (analyticsEls.passwordInput.value !== "1234") {
+      analyticsEls.passwordError.hidden = false;
+      analyticsEls.passwordInput.select();
+      return;
+    }
+    analyticsEls.passwordModal.hidden = true;
+    renderAnalyticsDashboard();
+    analyticsEls.dashboardModal.hidden = false;
+    document.body.classList.add("modal-open");
+  }
+
+  function closeAnalyticsDashboard() {
+    analyticsEls.dashboardModal.hidden = true;
+    document.body.classList.remove("modal-open");
+  }
+
+  function handleAnalyticsTrigger() {
+    analyticsTapCount += 1;
+    clearTimeout(analyticsTapTimer);
+    analyticsTapTimer = setTimeout(() => {
+      analyticsTapCount = 0;
+    }, 1400);
+
+    if (analyticsTapCount >= 5) {
+      analyticsTapCount = 0;
+      clearTimeout(analyticsTapTimer);
+      openAnalyticsPassword();
+    }
+  }
+
+  function renderAnalyticsDashboard() {
+    const data = loadAnalyticsData();
+    const records = data.records;
+    const total = records.length;
+    const deviceRecords = records.filter(record => record.mode === "device");
+    const stickRecords = records.filter(record => record.mode === "stick");
+
+    analyticsEls.totalCount.textContent = total;
+    analyticsEls.deviceCount.textContent = deviceRecords.length;
+    analyticsEls.deviceRate.textContent = `${percent(deviceRecords.length, total)}%`;
+    analyticsEls.stickCount.textContent = stickRecords.length;
+    analyticsEls.stickRate.textContent = `${percent(stickRecords.length, total)}%`;
+
+    const ableCount = deviceRecords.filter(record => record.recommendation === "릴 에이블 3.0").length;
+    const hybridCount = deviceRecords.filter(record => record.recommendation === "릴 하이브리드 3.0").length;
+    const deviceTotal = deviceRecords.length;
+
+    const deviceRows = [
+      ["릴 에이블 3.0", ableCount],
+      ["릴 하이브리드 3.0", hybridCount]
+    ];
+
+    analyticsEls.deviceBars.innerHTML = deviceRows.map(([name, count]) => {
+      const rate = percent(count, deviceTotal);
+      return `
+        <div class="analytics-bar-row">
+          <div class="analytics-bar-row__heading">
+            <span>${name}</span>
+            <strong>${count}명 · ${rate}%</strong>
+          </div>
+          <div class="analytics-bar-track"><span style="width:${rate}%"></span></div>
+        </div>
+      `;
+    }).join("");
+
+    analyticsEls.topCurrent.textContent = getTopValue(records, "currentProduct");
+    analyticsEls.topFlavor.textContent = getTopValue(stickRecords, "preferredFlavor");
+    analyticsEls.topStick.textContent = getTopValue(stickRecords, "recommendation");
+    analyticsEls.staffOpenCount.textContent = `${data.staffOpenCount}회`;
+
+    const latest = [...records].sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt))[0];
+    analyticsEls.lastCompleted.textContent = latest
+      ? new Date(latest.completedAt).toLocaleString("ko-KR", { month:"numeric", day:"numeric", hour:"2-digit", minute:"2-digit" })
+      : "기록 없음";
+  }
+
+  function escapeCsv(value) {
+    const text = String(value ?? "");
+    return `"${text.replace(/"/g, '""')}"`;
+  }
+
+  function downloadAnalyticsCsv() {
+    const data = loadAnalyticsData();
+    const headers = [
+      "완료시간", "추천구분", "현재제품", "선호맛", "추천결과",
+      "중요요소", "하루사용량", "선호사용감"
+    ];
+
+    const rows = data.records.map(record => [
+      new Date(record.completedAt).toLocaleString("ko-KR"),
+      record.mode === "device" ? "기기 추천" : "스틱 추천",
+      record.currentProduct || "",
+      record.preferredFlavor || "",
+      record.recommendation || "",
+      record.priority || "",
+      record.amount || "",
+      record.sensation || ""
+    ]);
+
+    const csv = "\uFEFF" + [headers, ...rows]
+      .map(row => row.map(escapeCsv).join(","))
+      .join("\n");
+
+    const blob = new Blob([csv], { type:"text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `find-my-lil-analytics-${new Date().toISOString().slice(0,10)}.csv`;
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function resetAnalyticsData() {
+    const confirmed = window.confirm("이 기기에 저장된 모든 분석 데이터를 삭제할까요?");
+    if (!confirmed) return;
+    saveAnalyticsData(getEmptyAnalyticsData());
+    renderAnalyticsDashboard();
+  }
 
   function showScreen(target) {
     const current = screens.find((screen) => !screen.hidden);
@@ -691,6 +922,22 @@
       const products = calculateRecommendations();
       renderResult(products);
       prepareStickConsulting(products);
+
+      const stickRows = getStickChoiceRows();
+      const currentProduct = stickRows.find(([label]) => label === "현재 제품")?.[1] || "";
+      const preferredFlavor = stickRows.find(([label]) => label === "선호 맛")?.[1] || "";
+      const priority = stickRows.find(([label]) => label.includes("중요"))?.[1] || "";
+
+      addAnalyticsRecord({
+        mode:"stick",
+        currentProduct,
+        preferredFlavor,
+        recommendation:products[0].name,
+        priority,
+        amount:"",
+        sensation:""
+      });
+
       showScreen(els.resultScreen);
     });
   }
@@ -747,6 +994,7 @@
     passwordEls.error.hidden = true;
     passwordEls.modal.hidden = true;
     populateStaffMode(lastStaffPayload);
+    increaseStaffOpenCount();
     staffEls.modal.hidden = false;
     staffEls.closeButton.focus();
   }
@@ -1129,6 +1377,17 @@
       const result = calculateDeviceResult();
       renderDeviceResult(result);
       prepareDeviceConsulting(result);
+
+      addAnalyticsRecord({
+        mode:"device",
+        currentProduct:DEVICE_LABELS.current[deviceState.answers.current] || "",
+        preferredFlavor:"",
+        recommendation:result.primary.name,
+        priority:DEVICE_LABELS.priority[deviceState.answers.priority] || "",
+        amount:DEVICE_LABELS.amount[deviceState.answers.amount] || "",
+        sensation:DEVICE_LABELS.sensation[deviceState.answers.sensation] || ""
+      });
+
       showScreen(deviceEls.resultScreen);
     });
   }
@@ -1199,8 +1458,27 @@
   });
   document.addEventListener("keydown", event => {
     if (event.key !== "Escape") return;
-    if (!passwordEls.modal.hidden) closeStaffPasswordModal();
+    if (!analyticsEls.passwordModal.hidden) closeAnalyticsPassword();
+    else if (!analyticsEls.dashboardModal.hidden) closeAnalyticsDashboard();
+    else if (!passwordEls.modal.hidden) closeStaffPasswordModal();
     else if (!staffEls.modal.hidden) closeStaffMode();
   });
+
+  analyticsEls.trigger.addEventListener("click", handleAnalyticsTrigger);
+  analyticsEls.passwordForm.addEventListener("submit", verifyAnalyticsPassword);
+  analyticsEls.passwordClose.addEventListener("click", closeAnalyticsPassword);
+  analyticsEls.passwordInput.addEventListener("input", () => {
+    analyticsEls.passwordInput.value = analyticsEls.passwordInput.value.replace(/\D/g, "").slice(0, 4);
+    analyticsEls.passwordError.hidden = true;
+  });
+  analyticsEls.passwordModal.addEventListener("click", event => {
+    if (event.target.hasAttribute("data-close-analytics-password")) closeAnalyticsPassword();
+  });
+  analyticsEls.dashboardClose.addEventListener("click", closeAnalyticsDashboard);
+  analyticsEls.dashboardModal.addEventListener("click", event => {
+    if (event.target.hasAttribute("data-close-analytics-dashboard")) closeAnalyticsDashboard();
+  });
+  analyticsEls.csvButton.addEventListener("click", downloadAnalyticsCsv);
+  analyticsEls.resetButton.addEventListener("click", resetAnalyticsData);
 
 })();

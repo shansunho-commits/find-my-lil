@@ -121,10 +121,10 @@
             </button>
           </div>
 
-          <div class="powered-brand" aria-label="Powered by KT&G LIL">
+          <button id="analyticsTrigger" class="powered-brand" type="button" aria-label="Powered by KT&G LIL">
             <span>Powered by</span>
             <strong>KT&amp;G LIL</strong>
-          </div>
+          </button>
 
           <p class="warning">
             흡연은 건강에 해롭습니다. 본 콘텐츠는 성인 흡연자를 위한 제품 취향 안내입니다.
@@ -471,6 +471,102 @@
         <p id="staffModeCompareScript"></p>
       </section>
       <button id="staffModeDoneButton" class="primary-button" type="button">상담 시작하기</button>
+    </section>
+  </div>
+
+
+  <div id="analyticsPasswordModal" class="analytics-password-modal" hidden>
+    <div class="analytics-modal-backdrop" data-close-analytics-password></div>
+    <section class="analytics-password-sheet" role="dialog" aria-modal="true" aria-labelledby="analyticsPasswordTitle">
+      <button id="analyticsPasswordClose" class="analytics-close-button" type="button" aria-label="닫기">×</button>
+      <div class="analytics-lock-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <rect x="5" y="10" width="14" height="11" rx="3"></rect>
+          <path d="M8 10V7a4 4 0 018 0v3"></path>
+          <path d="M12 15v2"></path>
+        </svg>
+      </div>
+      <p class="analytics-eyebrow">ANALYTICS MODE</p>
+      <h2 id="analyticsPasswordTitle">관리자 비밀번호를 입력해 주세요.</h2>
+      <p class="analytics-description">이 기기에서 진행된 설문 결과를 확인합니다.</p>
+      <form id="analyticsPasswordForm" class="analytics-password-form" novalidate>
+        <label for="analyticsPasswordInput">비밀번호</label>
+        <input id="analyticsPasswordInput" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="4자리 숫자">
+        <p id="analyticsPasswordError" class="analytics-password-error" hidden>비밀번호가 올바르지 않습니다.</p>
+        <button class="primary-button" type="submit">분석 화면 열기</button>
+      </form>
+    </section>
+  </div>
+
+  <div id="analyticsDashboardModal" class="analytics-dashboard-modal" hidden>
+    <div class="analytics-modal-backdrop" data-close-analytics-dashboard></div>
+    <section class="analytics-dashboard-sheet" role="dialog" aria-modal="true" aria-labelledby="analyticsDashboardTitle">
+      <header class="analytics-dashboard-header">
+        <div>
+          <p>LOCAL DEVICE ANALYTICS</p>
+          <h2 id="analyticsDashboardTitle">설문 분석 대시보드</h2>
+          <span>현재 기기에 저장된 결과만 집계됩니다.</span>
+        </div>
+        <button id="analyticsDashboardClose" class="analytics-close-button" type="button" aria-label="닫기">×</button>
+      </header>
+
+      <section class="analytics-summary-grid">
+        <article class="analytics-summary-card analytics-summary-card--primary">
+          <span>총 참여</span>
+          <strong id="analyticsTotalCount">0</strong>
+          <small>완료된 추천 수</small>
+        </article>
+        <article class="analytics-summary-card">
+          <span>기기 추천</span>
+          <strong id="analyticsDeviceCount">0</strong>
+          <small id="analyticsDeviceRate">0%</small>
+        </article>
+        <article class="analytics-summary-card">
+          <span>스틱 추천</span>
+          <strong id="analyticsStickCount">0</strong>
+          <small id="analyticsStickRate">0%</small>
+        </article>
+      </section>
+
+      <section class="analytics-panel">
+        <div class="analytics-panel-title">
+          <h3>추천 기기</h3>
+          <span>기기 추천 완료 기준</span>
+        </div>
+        <div id="analyticsDeviceBars" class="analytics-bar-list"></div>
+      </section>
+
+      <section class="analytics-panel">
+        <div class="analytics-panel-title">
+          <h3>인기 선택</h3>
+          <span>가장 많이 선택된 항목</span>
+        </div>
+        <div class="analytics-ranking-list">
+          <div><span>현재 사용 제품</span><strong id="analyticsTopCurrent">데이터 없음</strong></div>
+          <div><span>선호 맛</span><strong id="analyticsTopFlavor">데이터 없음</strong></div>
+          <div><span>추천 스틱</span><strong id="analyticsTopStick">데이터 없음</strong></div>
+        </div>
+      </section>
+
+      <section class="analytics-panel">
+        <div class="analytics-panel-title">
+          <h3>운영 현황</h3>
+          <span>상담 연결 데이터</span>
+        </div>
+        <div class="analytics-ranking-list">
+          <div><span>직원 화면 열기</span><strong id="analyticsStaffOpenCount">0회</strong></div>
+          <div><span>최근 완료</span><strong id="analyticsLastCompleted">기록 없음</strong></div>
+        </div>
+      </section>
+
+      <div class="analytics-actions">
+        <button id="analyticsCsvButton" class="primary-button" type="button">CSV 다운로드</button>
+        <button id="analyticsResetButton" class="secondary-button analytics-reset-button" type="button">오늘 데이터 초기화</button>
+      </div>
+
+      <p class="analytics-note">
+        GitHub Pages 단독 버전이므로 다른 휴대폰이나 태블릿의 결과와 자동으로 합쳐지지 않습니다.
+      </p>
     </section>
   </div>
 
