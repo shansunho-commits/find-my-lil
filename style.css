@@ -70,3 +70,272 @@ button,input{font:inherit}button{border:0}.app-shell{width:min(100%,620px);min-h
   border-color: rgba(37, 174, 234, 0.3);
   background: #eaf8fd;
 }
+
+
+/* =========================================================
+   V6.2 DESIGN REMASTER
+   ========================================================= */
+
+.hero-sparkle {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 13px;
+  place-items: center;
+  border-radius: 17px;
+  font-size: 23px;
+  background: linear-gradient(145deg, #e4f8ff, #ffffff);
+  box-shadow: 0 12px 26px rgba(37, 174, 234, 0.14);
+  animation: sparkleFloat 2.3s ease-in-out infinite;
+}
+
+@keyframes sparkleFloat {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-5px) rotate(3deg); }
+}
+
+.hero-card {
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 14% 3%, rgba(86, 198, 247, 0.14), transparent 29%),
+    radial-gradient(circle at 90% 10%, rgba(115, 216, 255, 0.12), transparent 28%),
+    rgba(255,255,255,.9);
+}
+
+.hero-card h1 {
+  font-size: clamp(32px, 8.7vw, 47px);
+}
+
+.start-choice {
+  overflow: hidden;
+  border-color: rgba(86, 198, 247, 0.2);
+  background:
+    radial-gradient(circle at 80% 12%, rgba(86, 198, 247, 0.18), transparent 34%),
+    linear-gradient(155deg, #ffffff, #edfaff);
+}
+
+.start-choice::after {
+  position: absolute;
+  right: -24px;
+  bottom: -30px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  content: "";
+  background: rgba(86,198,247,.08);
+}
+
+.start-choice--stick {
+  background:
+    radial-gradient(circle at 80% 12%, rgba(164, 210, 242, 0.22), transparent 34%),
+    linear-gradient(155deg, #ffffff, #f2f9fd);
+}
+
+.start-choice__icon {
+  font-size: 27px;
+  transform-origin: center;
+  transition: transform .2s ease;
+}
+
+.start-choice:active .start-choice__icon {
+  transform: scale(1.15) rotate(-5deg);
+}
+
+.answer-button {
+  min-height: 76px;
+  padding: 13px 14px;
+  border-radius: 22px;
+  transition:
+    transform .16s ease,
+    opacity .16s ease,
+    border-color .16s ease,
+    box-shadow .16s ease,
+    background .16s ease;
+}
+
+.answer-button:hover {
+  border-color: rgba(86,198,247,.35);
+  box-shadow: 0 13px 25px rgba(21,70,91,.09);
+}
+
+.answer-button.is-selected {
+  z-index: 2;
+  transform: scale(1.025);
+  border-color: rgba(37,174,234,.5);
+  background: linear-gradient(145deg,#e6f8ff,#ffffff);
+  box-shadow: 0 14px 30px rgba(37,174,234,.18);
+}
+
+.answer-button.is-selected .answer-icon {
+  animation: optionPop .3s cubic-bezier(.2,1.5,.4,1);
+}
+
+.answer-button.is-selected .answer-arrow {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 11px;
+  background: var(--brand-deep);
+}
+
+.answer-button.is-dimmed {
+  opacity: .42;
+  transform: scale(.985);
+}
+
+@keyframes optionPop {
+  0% { transform: scale(.75) rotate(-8deg); }
+  70% { transform: scale(1.15) rotate(3deg); }
+  100% { transform: scale(1); }
+}
+
+.answer-icon {
+  width: 47px;
+  height: 47px;
+  border-radius: 16px;
+  font-size: 20px;
+  background:
+    radial-gradient(circle at 30% 20%, #ffffff, transparent 42%),
+    var(--brand-soft);
+}
+
+.question-card {
+  background:
+    radial-gradient(circle at 100% 0%, rgba(86,198,247,.1), transparent 30%),
+    rgba(255,255,255,.92);
+}
+
+.product-grid {
+  gap: 11px;
+}
+
+.product-card {
+  border-radius: 20px;
+  box-shadow: 0 10px 22px rgba(20,72,98,.07);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.product-card:active {
+  transform: scale(.98);
+}
+
+.product-image {
+  aspect-ratio: .9 / 1;
+  padding: 5px;
+}
+
+.product-card strong {
+  padding: 12px 6px;
+  font-size: 10px;
+}
+
+.device-product-card {
+  box-shadow: 0 18px 40px rgba(28,91,118,.14);
+}
+
+.result-section {
+  border: 1px solid rgba(86,198,247,.09);
+}
+
+.result-heading::before {
+  display: grid;
+  width: 45px;
+  height: 45px;
+  margin: 0 auto 10px;
+  place-items: center;
+  border-radius: 16px;
+  content: "✨";
+  font-size: 21px;
+  background: #e8f8ff;
+}
+
+.staff-section h3,
+.analytics-panel h3 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.staff-recommendation {
+  border: 1px solid rgba(86,198,247,.13);
+  background:
+    radial-gradient(circle at 100% 0%,rgba(86,198,247,.15),transparent 35%),
+    #eaf8fd;
+}
+
+.analytics-kpis article:first-child {
+  color: #fff;
+  background: linear-gradient(145deg,#67cff8,#1ca7e4);
+}
+
+.analytics-kpis article:first-child span,
+.analytics-kpis article:first-child small,
+.analytics-kpis article:first-child strong {
+  color: #fff;
+}
+
+.bar-track {
+  height: 9px;
+}
+
+.bar-track span {
+  box-shadow: 0 2px 8px rgba(32,170,231,.18);
+}
+
+.question-back-button {
+  min-height: 52px;
+  font-size: 12px;
+}
+
+.primary-button,
+.secondary-button {
+  min-height: 57px;
+}
+
+@media (max-width: 390px) {
+  .answer-button {
+    min-height: 72px;
+  }
+
+  .answer-icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .start-choice strong {
+    font-size: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-sparkle,
+  .answer-button,
+  .answer-icon,
+  .start-choice__icon {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+
+/* V6.2.1 — 이모지 절제 */
+.hero-sparkle {
+  display: none !important;
+}
+
+.result-heading::before {
+  display: none !important;
+}
+
+.result-heading h2 {
+  margin-top: 0;
+}
+
+/* 사용량처럼 폭이 긴 이모지는 카드 밖으로 벗어나지 않도록 고정 */
+.answer-icon {
+  overflow: hidden;
+  white-space: nowrap;
+}

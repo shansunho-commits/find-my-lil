@@ -19,7 +19,16 @@
   const state = { mode:null, answers:{}, history:[], current:null, result:null };
   const STORAGE_KEY = "findMyLilAbleFocusAnalyticsV1";
 
-  const icons = { gender:"◐", age:"◷", current:"▣", priority:"★", amount:"▥", sensation:"≈", category:"◇", menthol:"❄" };
+  const icons = {
+    gender:"👤",
+    age:"🎂",
+    current:"🚬",
+    priority:"⭐",
+    amount:"📊",
+    sensation:"💨",
+    category:"🎯",
+    menthol:"❄️"
+  };
 
   const commonQuestions = {
     gender:{
@@ -99,6 +108,20 @@
     "레임 레귤러":{image:"images/raim-regular.png"}
   };
 
+  function getOptionIcon(key, value) {
+    const map = {
+      gender:{male:"👨",female:"👩"},
+      age:{"20s":"✨","30s":"🌟","40s":"💼","50plus":"🎖️"},
+      current:{cigarette:"🚬",iqos:"🔥",ploom:"🌿",glo:"⚫",hybrid:"💙",liquid:"💨"},
+      priority:{preheat:"⏱️",vapor:"☁️",satisfaction:"🔥",simple:"👌",price:"💳"},
+      amount:{low:"🚬",mid:"🚬",high:"🚬"},
+      sensation:{strong:"🔥",soft:"🌿",vapor:"☁️",balanced:"⚖️"},
+      category:{menthol:"❄️",scent:"🍇",original:"🚬"},
+      mentholStyle:{strong:"🥶",soft:"🌿",satisfying:"⚡"}
+    };
+    return map[key]?.[value] || icons[key] || "✨";
+  }
+
   function show(screen){
     els.screens.forEach(s=>s.classList.toggle("is-active",s===screen));
     window.scrollTo({top:0,behavior:"smooth"});
@@ -145,21 +168,32 @@
     q.options.forEach(([value,title,desc])=>{
       const b=document.createElement("button");
       b.type="button"; b.className="answer-button";
-      b.innerHTML=`<span class="answer-icon">${icons[q.icon] || "●"}</span><span class="answer-copy"><strong>${title}</strong>${desc?`<small>${desc}</small>`:""}</span><span class="answer-arrow">›</span>`;
-      b.addEventListener("click",()=>selectAnswer(key,value));
+      const optionIcon = getOptionIcon(key, value);
+      b.innerHTML=`<span class="answer-icon">${optionIcon}</span><span class="answer-copy"><strong>${title}</strong>${desc?`<small>${desc}</small>`:""}</span><span class="answer-arrow">›</span>`;
+      b.addEventListener("click",()=>selectAnswer(key,value,b));
       els.answerList.appendChild(b);
     });
     show(els.questionScreen);
   }
 
-  function selectAnswer(key,value){
-    state.answers[key]=value;
-    state.history.push(key);
-    const sequence=getSequence();
-    const idx=sequence.indexOf(key);
-    if(idx>=sequence.length-1){beginAnalysis();return}
-    state.current=sequence[idx+1];
-    renderQuestion();
+  function selectAnswer(key,value,button){
+    if (button) {
+      button.classList.add("is-selected");
+      button.querySelector(".answer-arrow").textContent = "✓";
+      document.querySelectorAll(".answer-button").forEach(item => {
+        if (item !== button) item.classList.add("is-dimmed");
+      });
+    }
+
+    setTimeout(() => {
+      state.answers[key]=value;
+      state.history.push(key);
+      const sequence=getSequence();
+      const idx=sequence.indexOf(key);
+      if(idx>=sequence.length-1){beginAnalysis();return}
+      state.current=sequence[idx+1];
+      renderQuestion();
+    }, 190);
   }
 
   function goBack(){
