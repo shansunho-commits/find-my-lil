@@ -20,14 +20,14 @@
   const STORAGE_KEY = "findMyLilAbleFocusAnalyticsV1";
 
   const icons = {
-    gender:"👤",
-    age:"🎂",
-    current:"🚬",
-    priority:"⭐",
-    amount:"📊",
-    sensation:"💨",
-    category:"🎯",
-    menthol:"❄️"
+    gender:"user",
+    age:"calendar",
+    current:"cigarette",
+    priority:"star",
+    amount:"chart",
+    sensation:"wind",
+    category:"layers",
+    menthol:"snow"
   };
 
   const commonQuestions = {
@@ -94,7 +94,7 @@
 
   const products = {
     "에임 아이스피크":{image:"images/aim-ice-peak.png"},
-    "에임 아이스팟":{image:"images/aim-ice-spot.jpg"},
+    "에임 아이스팟":{image:null},
     "에임 아이스노우":{image:"images/aim-ice-snow.png"},
     "레임 아이스":{image:"images/raim-ice.png"},
     "레임 아이스미드":{image:"images/raim-ice-mid.png"},
@@ -102,24 +102,51 @@
     "에임 탱고":{image:"images/aim-tango.png"},
     "에임 트와이스":{image:"images/aim-twice.png"},
     "에임 블루밍":{image:"images/aim-blooming.png"},
-    "에임 리믹스":{image:"images/aim-remix-photo.jpg"},
+    "에임 리믹스":{image:null},
     "에임 시가리쉬":{image:"images/aim-cigarish.png"},
     "에임 까메오":{image:"images/aim-cameo.png"},
     "레임 레귤러":{image:"images/raim-regular.png"}
   };
 
+  function iconSvg(name) {
+    const paths = {
+      user:'<circle cx="12" cy="8" r="3.2"></circle><path d="M5.5 20c.7-4 3-6 6.5-6s5.8 2 6.5 6"></path>',
+      calendar:'<rect x="3" y="5" width="18" height="16" rx="2.5"></rect><path d="M8 3v4M16 3v4M3 10h18"></path>',
+      cigarette:'<path d="M3 14h14v4H3z"></path><path d="M17 14h4v4h-4"></path><path d="M18 6c0 2 2 2 2 4M14 5c0 2 2 2 2 4"></path>',
+      star:'<path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3z"></path>',
+      chart:'<path d="M5 20V10M12 20V4M19 20v-7"></path>',
+      wind:'<path d="M3 8h11c2.5 0 2.5-4 0-4-1.2 0-2 .6-2.4 1.4M3 12h16c2.7 0 2.7 4 0 4-1 0-1.8-.4-2.3-1.2M3 16h8"></path>',
+      layers:'<path d="m12 3 9 5-9 5-9-5 9-5z"></path><path d="m3 12 9 5 9-5M3 16l9 5 9-5"></path>',
+      snow:'<path d="M12 2v20M4 7l16 10M20 7 4 17M8.5 4.5 12 7l3.5-2.5M8.5 19.5 12 17l3.5 2.5"></path>',
+      male:'<circle cx="10" cy="10" r="5"></circle><path d="M14 6l5-5M15 1h4v4"></path>',
+      female:'<circle cx="12" cy="9" r="5"></circle><path d="M12 14v7M9 18h6"></path>',
+      clock:'<circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path>',
+      cloud:'<path d="M6 18h11a4 4 0 0 0 .5-8 6 6 0 0 0-11.3 2A3 3 0 0 0 6 18z"></path>',
+      flame:'<path d="M13 2s1 4-2 6c-2 1.4-3 3.4-3 5.5A4.5 4.5 0 0 0 17 14c0-4-2-6-4-8 0 3-1 4-2 5"></path>',
+      hand:'<path d="M8 11V6a1.5 1.5 0 0 1 3 0v4M11 10V5a1.5 1.5 0 0 1 3 0v5M14 10V6a1.5 1.5 0 0 1 3 0v6M8 10a1.5 1.5 0 0 0-3 0v4c0 4 2.5 7 7 7h1c4 0 6-2.5 6-6v-3"></path>',
+      card:'<rect x="3" y="5" width="18" height="14" rx="2.5"></rect><path d="M3 10h18M7 15h4"></path>',
+      leaf:'<path d="M20 4C11 4 5 8 5 15c0 3 2 5 5 5 7 0 10-7 10-16z"></path><path d="M5 19c3-5 7-8 12-11"></path>',
+      balance:'<path d="M12 3v18M5 7h14M7 7l-3 6h6L7 7zM17 7l-3 6h6l-3-6zM8 21h8"></path>',
+      bolt:'<path d="m13 2-7 11h6l-1 9 7-12h-6l1-8z"></path>',
+      berry:'<circle cx="9" cy="12" r="4"></circle><circle cx="15" cy="12" r="4"></circle><circle cx="12" cy="16" r="4"></circle><path d="M12 7c0-2 2-3 4-3"></path>',
+      blackdot:'<circle cx="12" cy="12" r="6"></circle>',
+      droplet:'<path d="M12 3s6 6.5 6 11a6 6 0 1 1-12 0c0-4.5 6-11 6-11z"></path>'
+    };
+    return `<svg class="line-icon" viewBox="0 0 24 24" aria-hidden="true">${paths[name] || paths.layers}</svg>`;
+  }
+
   function getOptionIcon(key, value) {
     const map = {
-      gender:{male:"👨",female:"👩"},
-      age:{"20s":"✨","30s":"🌟","40s":"💼","50plus":"🎖️"},
-      current:{cigarette:"🚬",iqos:"🔥",ploom:"🌿",glo:"⚫",hybrid:"💙",liquid:"💨"},
-      priority:{preheat:"⏱️",vapor:"☁️",satisfaction:"🔥",simple:"👌",price:"💳"},
-      amount:{low:"🚬",mid:"🚬",high:"🚬"},
-      sensation:{strong:"🔥",soft:"🌿",vapor:"☁️",balanced:"⚖️"},
-      category:{menthol:"❄️",scent:"🍇",original:"🚬"},
-      mentholStyle:{strong:"🥶",soft:"🌿",satisfying:"⚡"}
+      gender:{male:"male",female:"female"},
+      age:{"20s":"calendar","30s":"calendar","40s":"calendar","50plus":"calendar"},
+      current:{cigarette:"cigarette",iqos:"flame",ploom:"leaf",glo:"blackdot",hybrid:"layers",liquid:"droplet"},
+      priority:{preheat:"clock",vapor:"cloud",satisfaction:"flame",simple:"hand",price:"card"},
+      amount:{low:"cigarette",mid:"cigarette",high:"cigarette"},
+      sensation:{strong:"flame",soft:"leaf",vapor:"cloud",balanced:"balance"},
+      category:{menthol:"snow",scent:"berry",original:"cigarette"},
+      mentholStyle:{strong:"snow",soft:"leaf",satisfying:"bolt"}
     };
-    return map[key]?.[value] || icons[key] || "✨";
+    return iconSvg(map[key]?.[value] || icons[key] || "layers");
   }
 
   function show(screen){
@@ -161,7 +188,7 @@
     els.progressPercent.textContent=`${pct}%`;
     els.progressBar.style.width=`${pct}%`;
     els.questionStep.textContent=`Q${idx+1}`;
-    els.questionIcon.textContent=icons[q.icon] || "●";
+    els.questionIcon.innerHTML=iconSvg(icons[q.icon] || "layers");
     els.questionTitle.textContent=q.title;
     els.questionDescription.textContent=q.description;
     els.answerList.innerHTML="";
@@ -280,7 +307,7 @@
       els.resultSubtitle.textContent="회원님의 선택을 바탕으로 안내드리는 제품입니다.";
       els.stickProductGrid.innerHTML=list.map(name=>{
         const p=products[name];
-        const image=p && p.image ? `<img src="${p.image}" alt="${name}">` : `<span class="product-placeholder">${name}<br><small>이미지 교체 가능</small></span>`;
+        const image=p && p.image ? `<img src="${p.image}" alt="${name}">` : `<span class="product-placeholder"><span class="placeholder-icon" aria-hidden="true"></span><strong>이미지 준비중</strong><small>${name}</small></span>`;
         return `<article class="product-card"><div class="product-image">${image}</div><strong>${name}</strong></article>`;
       }).join("");
       els.crossRecommendButton.textContent="나에게 맞는 릴 기기도 찾아보기";

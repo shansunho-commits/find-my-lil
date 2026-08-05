@@ -25,12 +25,16 @@
 
         <div class="start-grid">
           <button class="start-choice start-choice--device" data-start="device" type="button">
-            <span class="start-choice__icon start-choice__icon--device">📱</span>
+            <span class="start-choice__icon start-choice__icon--device" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2.5"></rect><path d="M10 18.5h4"></path></svg>
+            </span>
             <strong>릴 기기 추천</strong>
             <small>나에게 맞는 릴 기기 찾기</small>
           </button>
           <button class="start-choice start-choice--stick" data-start="stick" type="button">
-            <span class="start-choice__icon start-choice__icon--stick">🚬</span>
+            <span class="start-choice__icon start-choice__icon--stick" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M3 14h14v4H3z"></path><path d="M17 14h4v4h-4"></path><path d="M18 6c0 2 2 2 2 4"></path><path d="M14 5c0 2 2 2 2 4"></path></svg>
+            </span>
             <strong>릴 스틱 추천</strong>
             <small>선택 계열에 따른 스틱 보기</small>
           </button>
@@ -153,9 +157,9 @@
         <button id="staffClose" class="modal-close" type="button">×</button>
       </header>
       <div id="staffRecommendation" class="staff-recommendation"></div>
-      <section class="staff-section"><h3>👤 고객 선택</h3><div id="staffChoices"></div></section>
-      <section class="staff-section"><h3>💡 상담 포인트</h3><div id="staffPoints" class="staff-points"></div></section>
-      <section class="staff-section"><h3>🗣️ 상담 멘트</h3><p id="staffScript" class="staff-script"></p></section>
+      <section class="staff-section"><h3>고객 선택</h3><div id="staffChoices"></div></section>
+      <section class="staff-section"><h3>상담 포인트</h3><div id="staffPoints" class="staff-points"></div></section>
+      <section class="staff-section"><h3>상담 멘트</h3><p id="staffScript" class="staff-script"></p></section>
       <button id="staffDone" class="primary-button" type="button">상담 화면 닫기</button>
     </section>
   </div>
@@ -189,10 +193,10 @@
         <article><span>스틱 추천</span><strong id="stickCount">0</strong><small id="stickRate">0%</small></article>
       </div>
 
-      <section class="analytics-panel"><h3>👤 성별</h3><div id="genderStats" class="bar-list"></div></section>
-      <section class="analytics-panel"><h3>🎂 연령대</h3><div id="ageStats" class="bar-list"></div></section>
-      <section class="analytics-panel"><h3>🚬 현재 사용 제품</h3><div id="currentStats" class="bar-list"></div></section>
-      <section class="analytics-panel"><h3>📊 선택 현황</h3>
+      <section class="analytics-panel"><h3>성별</h3><div id="genderStats" class="bar-list"></div></section>
+      <section class="analytics-panel"><h3>연령대</h3><div id="ageStats" class="bar-list"></div></section>
+      <section class="analytics-panel"><h3>현재 사용 제품</h3><div id="currentStats" class="bar-list"></div></section>
+      <section class="analytics-panel"><h3>선택 현황</h3>
         <div class="ranking-list">
           <div><span>가장 많이 선택한 기기 기준</span><strong id="topPriority">데이터 없음</strong></div>
           <div><span>가장 많이 선택한 사용감</span><strong id="topSensation">데이터 없음</strong></div>
