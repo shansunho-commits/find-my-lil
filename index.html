@@ -1,574 +1,213 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#56C6F7">
-  <meta name="description" content="성인 흡연자를 위한 릴 스틱 취향 추천 웹앱 Find My LIL">
+  <meta name="theme-color" content="#f3fbff">
   <title>Find My LIL</title>
   <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
 </head>
 <body>
-  <noscript class="noscript">이 서비스를 이용하려면 JavaScript를 활성화해 주세요.</noscript>
-
-  <div class="app-shell">
-    <div class="ambient ambient--one" aria-hidden="true"></div>
-    <div class="ambient ambient--two" aria-hidden="true"></div>
-
-    <header class="topbar">
-      <button id="backButton" class="icon-button" type="button" aria-label="이전 질문" hidden>
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M15 18l-6-6 6-6"></path>
-        </svg>
+  <main class="app-shell">
+    <header class="app-header">
+      <button id="homeButton" class="brand-button" type="button" aria-label="처음 화면으로 이동">
+        <span class="brand-mark">LIL</span>
+        <span>Find My LIL</span>
       </button>
-      <button id="logoButton" class="logo-button" type="button" aria-label="첫 화면으로 이동">
-        <span>Find My</span><strong>LIL</strong>
-      </button>
-
-      <div class="topbar-spacer"></div>
+      <button id="backButton" class="back-button" type="button" hidden>이전</button>
     </header>
 
-    <section id="progressSection" class="progress-section" hidden>
-      <div class="progress-meta">
-        <span id="progressStep">TASTE MATCHING</span>
-        <strong id="progressText">10%</strong>
-      </div>
-      <div
-        id="progressTrack"
-        class="progress-track"
-        role="progressbar"
-        aria-valuemin="0"
-        aria-valuemax="100"
-        aria-valuenow="10"
-      >
-        <div id="progressBar" class="progress-bar"></div>
+    <section id="startScreen" class="screen is-active">
+      <div class="hero-card">
+        <p class="eyebrow">PERSONAL RECOMMENDATION EXPERIENCE</p>
+        <h1>나에게 맞는<br>릴을 찾아보세요.</h1>
+        <p class="hero-copy">간단한 질문을 통해 릴 기기와 스틱을 안내해 드립니다.</p>
+
+        <div class="start-grid">
+          <button class="start-choice start-choice--device" data-start="device" type="button">
+            <span class="start-choice__icon">▯</span>
+            <strong>릴 기기 추천</strong>
+            <small>나에게 맞는 릴 기기 찾기</small>
+          </button>
+          <button class="start-choice start-choice--stick" data-start="stick" type="button">
+            <span class="start-choice__icon">▭</span>
+            <strong>릴 스틱 추천</strong>
+            <small>선택 계열에 따른 스틱 보기</small>
+          </button>
+        </div>
+
+        <label class="adult-check">
+          <input id="adultCheck" type="checkbox">
+          <span>만 19세 이상입니다.</span>
+        </label>
+        <p id="adultError" class="inline-error" hidden>만 19세 이상 확인이 필요합니다.</p>
+
+        <button id="analyticsTrigger" class="powered-brand" type="button" aria-label="Powered by KT&G LIL">
+          <span>Powered by</span>
+          <strong>KT&amp;G LIL</strong>
+        </button>
+        <p class="legal-note">본 결과는 선택한 답변을 바탕으로 제공되는 제품 안내이며, 실제 만족도에는 개인차가 있을 수 있습니다.</p>
       </div>
     </section>
 
-    <main id="appMain" class="app-main">
-      <section id="startScreen" class="screen screen--active start-screen">
-        <div class="hero">
-          <div class="hero-mark" aria-hidden="true">
-            <div class="hero-mark__ring"></div>
-            <div class="hero-mark__core">lil</div>
-          </div>
-
-          <p class="eyebrow">PREMIUM TASTE MATCHING</p>
-          <h1>
-            <span>Find My LIL</span>
-            나에게 맞는 릴을<br>
-            찾아보세요.
-          </h1>
-          <p class="hero-description">
-            기기와 스틱 중 원하는 추천을 선택하고<br>
-            나에게 맞는 릴을 찾아보세요.
-          </p>
-
-          <div class="duration-pill">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="12" cy="12" r="8"></circle>
-              <path d="M12 7.5v5l3 1.8"></path>
-            </svg>
-            약 30초~1분 소요
-          </div>
-        </div>
-
-        <div class="start-actions">
-          <label class="age-check">
-            <input id="adultCheckbox" type="checkbox">
-            <span class="custom-check">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4 4L19 7"></path></svg>
-            </span>
-            <span>만 19세 이상 성인 흡연자입니다.</span>
-          </label>
-
-          <p id="ageError" class="form-error" hidden>성인 여부를 확인해 주세요.</p>
-
-          <div class="recommendation-type-picker" aria-label="추천 종류 선택">
-            <button id="deviceStartButton" class="type-select-button type-select-button--device" type="button">
-              <span class="type-select-button__icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24">
-                  <rect x="8" y="3" width="8" height="18" rx="3"></rect>
-                  <path d="M10 7h4"></path>
-                  <circle cx="12" cy="17" r="1"></circle>
-                </svg>
-              </span>
-              <span class="type-select-button__copy">
-                <strong>릴 기기 추천</strong>
-                <small>나에게 맞는 릴 기기 찾기</small>
-              </span>
-              <svg class="type-select-button__arrow" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M9 6l6 6-6 6"></path>
-              </svg>
-            </button>
-
-            <button id="stickStartButton" class="type-select-button type-select-button--stick" type="button">
-              <span class="type-select-button__icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24">
-                  <path d="M5 9h10v6H5z"></path>
-                  <path d="M15 9h3v6h-3z"></path>
-                  <path d="M20 7c1 1 1 3 0 4"></path>
-                </svg>
-              </span>
-              <span class="type-select-button__copy">
-                <strong>릴 스틱 추천</strong>
-                <small>나에게 맞는 릴 스틱 찾기</small>
-              </span>
-              <svg class="type-select-button__arrow" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M9 6l6 6-6 6"></path>
-              </svg>
-            </button>
-          </div>
-
-          <button id="analyticsTrigger" class="powered-brand" type="button" aria-label="Powered by KT&G LIL">
-            <span>Powered by</span>
-            <strong>KT&amp;G LIL</strong>
-          </button>
-
-          <p class="warning">
-            흡연은 건강에 해롭습니다. 본 콘텐츠는 성인 흡연자를 위한 제품 취향 안내입니다.
-          </p>
-        </div>
-      </section>
-
-      <section id="questionScreen" class="screen question-screen" hidden>
-        <article class="question-card">
-          <div class="question-heading">
-            <span id="questionNumber" class="question-number">Q1</span>
-            <span id="questionCategory" class="question-category">현재 이용 제품</span>
-          </div>
-
-          <h2 id="questionTitle">현재 사용 중인 제품은?</h2>
-          <p id="questionDescription">가장 자주 사용하는 제품 한 가지를 선택해 주세요.</p>
-
-          <div id="answerList" class="answer-list" role="group" aria-labelledby="questionTitle"></div>
-        </article>
-
-        <p class="answer-guide">선택하면 다음 질문으로 자동 이동합니다.</p>
-      </section>
-
-      <section id="analysisScreen" class="screen analysis-screen" hidden>
-        <div class="analysis-visual" aria-hidden="true">
-          <div class="orbit orbit--outer"><span></span></div>
-          <div class="orbit orbit--inner"><span></span></div>
-          <div class="analysis-core">lil</div>
-        </div>
-
-        <p class="eyebrow">PERSONAL TASTE ANALYSIS</p>
-        <h2 id="stickAnalysisTitle">취향 데이터를 확인하고 있습니다.</h2>
-        <p id="stickAnalysisMessage">회원님의 답변을 정리하고 있습니다.</p>
-        <div class="analysis-step-progress" aria-hidden="true"><span id="stickAnalysisProgressBar"></span></div>
-        <div id="stickAnalysisChecklist" class="analysis-checklist" aria-hidden="true">
-          <span class="is-active">취향 데이터 확인</span>
-          <span>맛 성향 분석</span>
-          <span>최종 추천 계산</span>
-        </div>
-
-        <div class="loading-dots" aria-label="분석 진행 중">
-          <span></span><span></span><span></span>
-        </div>
-      </section>
-
-      <section id="resultScreen" class="screen result-screen" hidden>
-        <div class="result-intro">
-          <div class="complete-icon">
-            <svg viewBox="0 0 64 64" aria-hidden="true">
-              <circle cx="32" cy="32" r="25"></circle>
-              <path d="M20 33l8 8 17-19"></path>
-            </svg>
-          </div>
-          <p>🎉 분석 완료</p>
-          <h2>회원님의 릴 스틱 추천 TOP 3</h2>
-          <span>선택한 답변을 바탕으로 취향에 가까운 제품을 순서대로 안내합니다.</span>
-        </div>
-
-        <section class="top-match-section" aria-labelledby="topMatchTitle">
-          <div class="section-title section-title--result">
-            <span>✦</span>
-            <h3 id="topMatchTitle">추천 릴 스틱</h3>
-          </div>
-          <div id="recommendationList" class="recommendation-list"></div>
-        </section>
-
-        <section class="customer-choice-section stick-choice-section">
-          <div class="section-title"><span>✓</span><h3>고객님의 선택</h3></div>
-          <div id="stickCustomerChoiceList" class="customer-choice-list"></div>
-        </section>
-
-        <section class="consulting-preview-section">
-          <div class="consulting-preview-section__heading">
-            <span class="staff-pill">STAFF GUIDE</span>
-            <h3>바로 이어갈 수 있는 상담 포인트</h3>
-          </div>
-          <div id="stickConsultingPoints" class="consulting-point-list"></div>
-          <p id="stickConsultingScript" class="consulting-script"></p>
-        </section>
-
-        <section class="device-bridge-section">
-          <div class="device-bridge-section__visual" aria-hidden="true">
-            <img src="images/lil-able-3.webp" alt="">
-          </div>
-          <div class="device-bridge-section__copy">
-            <p>NEXT RECOMMENDATION</p>
-            <h3>이 스틱과 함께 사용할<br>릴 기기도 추천받아 보세요.</h3>
-            <span>몇 가지 질문으로 에이블 3.0과 하이브리드 3.0 중 더 잘 맞는 기기를 안내합니다.</span>
-          </div>
-          <button id="startDeviceFromStickButton" class="device-bridge-button" type="button">
-            나에게 맞는 릴 기기 추천받기
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
-          </button>
-        </section>
-
-        <section class="coupon-section">
-          <div class="coupon-icon" aria-hidden="true">🎁</div>
-          <div class="coupon-copy">
-            <p>릴 기기 할인 혜택</p>
-            <h3>릴 기기 할인 혜택을 받아보세요</h3>
-            <span id="deviceBenefitText">릴 기기 할인 혜택을 직원에게 안내받아 보세요.</span>
-          </div>
-          <button id="couponButton" class="coupon-button" type="button">
-            직원에게 화면 보여주기
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
-          </button>
-        </section>
-
-        <button id="restartButton" class="secondary-button" type="button">
-          다시 테스트하기
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M20 11a8 8 0 10-2.3 5.7"></path>
-            <path d="M20 5v6h-6"></path>
-          </svg>
-        </button>
-
-        <p class="result-warning">
-          본 결과는 입력한 취향을 기반으로 한 제품 안내이며 실제 만족도는 개인에 따라 다를 수 있습니다.
-          흡연은 건강에 해롭습니다.
-        </p>
-      </section>
-
-      <section id="deviceQuestionScreen" class="screen question-screen" hidden>
-        <article class="question-card">
-          <div class="question-heading">
-            <span id="deviceQuestionNumber" class="question-number">Q1</span>
-            <span id="deviceQuestionCategory" class="question-category">기기 추천</span>
-          </div>
-          <h2 id="deviceQuestionTitle">현재 사용 중인 제품은?</h2>
-          <p id="deviceQuestionDescription">가장 자주 사용하는 제품을 선택해 주세요.</p>
-          <div id="deviceAnswerList" class="answer-list" role="group" aria-labelledby="deviceQuestionTitle"></div>
-        </article>
-        <p class="answer-guide">선택하면 다음 질문으로 자동 이동합니다.</p>
-      </section>
-
-      <section id="deviceAnalysisScreen" class="screen analysis-screen" hidden>
-        <div class="analysis-visual" aria-hidden="true">
-          <div class="orbit orbit--outer"><span></span></div>
-          <div class="orbit orbit--inner"><span></span></div>
-          <div class="analysis-core">
-            <svg viewBox="0 0 24 24">
-              <rect x="8" y="3" width="8" height="18" rx="3"></rect>
-              <path d="M10 7h4"></path>
-            </svg>
-          </div>
-        </div>
-        <p class="eyebrow">LIL DEVICE MATCHING</p>
-        <h2 id="deviceAnalysisTitle">사용 습관을 확인하고 있습니다.</h2>
-        <p id="deviceAnalysisMessage">고객님의 기기 선택 기준을 정리하고 있습니다.</p>
-        <div class="analysis-step-progress" aria-hidden="true"><span id="deviceAnalysisProgressBar"></span></div>
-        <div id="deviceAnalysisChecklist" class="analysis-checklist" aria-hidden="true">
-          <span class="is-active">사용 패턴 확인</span>
-          <span>기기 선호 분석</span>
-          <span>최종 추천 계산</span>
-        </div>
-        <div class="loading-dots" aria-label="분석 진행 중"><span></span><span></span><span></span></div>
-      </section>
-
-      <section id="deviceResultScreen" class="screen device-result-screen" hidden>
-        <div class="result-intro">
-          <div class="complete-icon">
-            <svg viewBox="0 0 64 64" aria-hidden="true">
-              <circle cx="32" cy="32" r="25"></circle>
-              <path d="M20 33l8 8 17-19"></path>
-            </svg>
-          </div>
-          <p>🎉 기기 분석 완료</p>
-          <h2>회원님께 추천드리는 릴 기기</h2>
-          <span>선택한 사용 습관과 선호도를 바탕으로 추천했습니다.</span>
-        </div>
-
-        <article id="primaryDeviceCard" class="primary-device-card">
-          <div class="primary-device-card__image">
-            <img id="primaryDeviceImage" src="images/lil-able-3.webp" alt="">
-            <span class="primary-device-card__badge">BEST MATCH</span>
-          </div>
-          <div class="primary-device-card__content">
-            <div class="device-match-heading">
-              <p>회원님과 가장 잘 맞는 기기</p>
-              <strong id="primaryDeviceMatch">96%</strong>
-            </div>
-            <h3 id="primaryDeviceName">릴 에이블 3.0</h3>
-            <div class="match-bar"><span id="primaryDeviceMatchBar" style="width:96%"></span></div>
-            <p id="primaryDeviceSummary" class="device-summary"></p>
-            <div id="primaryDeviceReasons" class="device-reason-chips"></div>
-          </div>
-        </article>
-
-        <section class="customer-choice-section">
-          <div class="section-title">
-            <span>✓</span>
-            <h3>고객님의 선택</h3>
-          </div>
-          <div id="customerChoiceList" class="customer-choice-list"></div>
-        </section>
-
-        <section class="consulting-preview-section device-consulting-preview">
-          <div class="consulting-preview-section__heading">
-            <span class="staff-pill">STAFF GUIDE</span>
-            <h3>바로 이어갈 수 있는 상담 포인트</h3>
-          </div>
-          <div id="deviceConsultingPoints" class="consulting-point-list"></div>
-          <p id="deviceConsultingScript" class="consulting-script"></p>
-        </section>
-
-        <section class="compare-device-section">
-          <div class="section-title">
-            <span>↔</span>
-            <h3>함께 비교해 볼 기기</h3>
-          </div>
-          <article class="compare-device-card">
-            <img id="secondaryDeviceImage" src="images/lil-hybrid-3.jpg" alt="">
-            <div>
-              <p>SECOND PICK</p>
-              <h3 id="secondaryDeviceName">릴 하이브리드 3.0</h3>
-              <strong id="secondaryDeviceMatch">84%</strong>
-            </div>
-          </article>
-        </section>
-
-        <section class="stick-bridge-section">
-          <div class="stick-bridge-section__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <path d="M5 9h10v6H5z"></path>
-              <path d="M15 9h3v6h-3z"></path>
-              <path d="M20 7c1 1 1 3 0 4"></path>
-            </svg>
-          </div>
-          <div class="stick-bridge-section__copy">
-            <p>NEXT RECOMMENDATION</p>
-            <h3>나에게 맞는 릴 스틱도<br>찾아볼까요?</h3>
-            <span>선호하는 맛과 강도를 분석해 어울리는 릴 스틱 TOP 3를 안내합니다.</span>
-          </div>
-          <button id="startStickFromDeviceButton" class="stick-bridge-button" type="button">
-            나에게 맞는 릴 스틱 추천받기
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
-          </button>
-        </section>
-
-        <section class="coupon-section device-coupon-section">
-          <div class="coupon-icon" aria-hidden="true">🎁</div>
-          <div class="coupon-copy">
-            <p>릴 기기 할인 혜택</p>
-            <h3>추천 결과를 직원에게 보여주세요.</h3>
-            <span>고객님의 선택과 추천 결과를 확인하고 기기 특징과 할인 혜택을 안내해드립니다.</span>
-          </div>
-          <button id="deviceStaffButton" class="coupon-button" type="button">
-            직원에게 화면 보여주기
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
-          </button>
-        </section>
-
-        <button id="deviceRestartButton" class="secondary-button" type="button">
-          처음부터 다시 선택하기
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M20 11a8 8 0 10-2.3 5.7"></path>
-            <path d="M20 5v6h-6"></path>
-          </svg>
-        </button>
-
-        <p class="result-warning">
-          본 결과는 입력한 사용 습관을 기반으로 한 제품 안내이며 실제 만족도는 개인에 따라 다를 수 있습니다.
-        </p>
-      </section>
-    </main>
-
-    <div id="couponModal" class="coupon-modal" hidden>
-      <div class="coupon-modal__backdrop" data-close-coupon></div>
-      <section class="coupon-modal__sheet" role="dialog" aria-modal="true" aria-labelledby="couponModalTitle">
-        <button id="couponCloseButton" class="coupon-close" type="button" aria-label="닫기">×</button>
-        <div class="staff-badge">STAFF</div>
-        <p class="coupon-modal__eyebrow">직원에게 이 화면을 보여주세요.</p>
-        <h2 id="couponModalTitle">릴 기기 할인 혜택을<br>안내받고 싶어요.</h2>
-        <div class="staff-message">
-          <span>고객 요청</span>
-          <strong>릴 기기 할인 혜택 안내</strong>
-        </div>
-        <p class="coupon-modal__help">직원에게 이 화면을 보여주세요..</p>
-        <button id="couponDoneButton" class="primary-button coupon-done" type="button">확인</button>
-      </section>
-    </div>
-
-    <div class="home-indicator" aria-hidden="true"></div>
-    <div id="liveRegion" class="sr-only" aria-live="polite"></div>
-  </div>
-    <div id="staffPasswordModal" class="staff-password-modal" hidden>
-    <div class="staff-password-modal__backdrop" data-close-password></div>
-    <section class="staff-password-modal__sheet" role="dialog" aria-modal="true" aria-labelledby="staffPasswordTitle">
-      <button id="staffPasswordCloseButton" class="staff-password-close" type="button" aria-label="닫기">×</button>
-      <div class="staff-lock-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24">
-          <rect x="5" y="10" width="14" height="11" rx="3"></rect>
-          <path d="M8 10V7a4 4 0 018 0v3"></path>
-          <circle cx="12" cy="15" r="1"></circle>
-        </svg>
+    <section id="questionScreen" class="screen">
+      <div class="progress-wrap" aria-label="진행률">
+        <div class="progress-meta"><span id="progressLabel">1 / 6</span><strong id="progressPercent">15%</strong></div>
+        <div class="progress-track"><span id="progressBar"></span></div>
       </div>
-      <p class="staff-password-eyebrow">STAFF ONLY</p>
-      <h2 id="staffPasswordTitle">직원 비밀번호를 입력해 주세요.</h2>
-      <p class="staff-password-description">고객님의 선택과 상담 포인트는 직원만 확인할 수 있습니다.</p>
+      <article class="question-card">
+        <div id="questionIcon" class="question-icon">●</div>
+        <p id="questionStep" class="question-step">Q1</p>
+        <h2 id="questionTitle"></h2>
+        <p id="questionDescription"></p>
+        <div id="answerList" class="answer-list"></div>
+        <button id="questionBackButton" class="question-back-button" type="button">
+          <span aria-hidden="true">←</span>
+          이전 질문
+        </button>
+      </article>
+    </section>
 
-      <form id="staffPasswordForm" class="staff-password-form" novalidate>
-        <label for="staffPasswordInput">비밀번호</label>
-        <div class="staff-password-input-wrap">
-          <input
-            id="staffPasswordInput"
-            type="password"
-            inputmode="numeric"
-            pattern="[0-9]*"
-            maxlength="4"
-            autocomplete="off"
-            placeholder="4자리 숫자"
-            aria-describedby="staffPasswordError"
-          >
-          <button id="staffPasswordVisibilityButton" type="button" aria-label="비밀번호 표시">
-            <svg class="password-eye password-eye--show" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M2 12s4-6 10-6 10 6 10 6-4 6-10 6S2 12 2 12z"></path>
-              <circle cx="12" cy="12" r="2.5"></circle>
-            </svg>
-          </button>
+    <section id="analysisScreen" class="screen">
+      <article class="analysis-card">
+        <div class="analysis-orbit"><span></span><i></i></div>
+        <p class="eyebrow">ANALYZING</p>
+        <h2 id="analysisTitle">선택하신 내용을 확인하고 있습니다.</h2>
+        <p id="analysisMessage">안내할 제품 정보를 정리하고 있습니다.</p>
+        <div class="analysis-progress"><span id="analysisBar"></span></div>
+        <div id="analysisChecklist" class="analysis-checklist">
+          <span class="is-active">선택 내용 확인</span>
+          <span>제품 정보 비교</span>
+          <span>결과 준비</span>
         </div>
-        <p id="staffPasswordError" class="staff-password-error" hidden>비밀번호가 올바르지 않습니다.</p>
-        <button class="primary-button staff-password-submit" type="submit">직원 화면 열기</button>
+      </article>
+    </section>
+
+    <section id="resultScreen" class="screen">
+      <article class="result-card">
+        <div class="result-heading">
+          <p class="eyebrow">RESULT</p>
+          <h2 id="resultTitle">회원님의 선택 결과</h2>
+          <p id="resultSubtitle"></p>
+        </div>
+
+        <section id="deviceResult" hidden>
+          <div class="device-product-card">
+            <div class="device-image-wrap">
+              <img src="images/lil-able-3.webp" alt="릴 에이블 3.0">
+            </div>
+            <div>
+              <span class="result-badge">추천 기기</span>
+              <h3>릴 에이블 3.0</h3>
+              <p>고객님의 선택 내용을 바탕으로 에이블 3.0을 안내드립니다.</p>
+            </div>
+          </div>
+          <section class="result-section">
+            <h3>추천 포인트</h3>
+            <div id="deviceReasonList" class="reason-list"></div>
+          </section>
+        </section>
+
+        <section id="stickResult" hidden>
+          <section class="result-section">
+            <h3>추천 릴 스틱</h3>
+            <p class="section-copy">순위 없이 함께 안내드리는 제품입니다.</p>
+            <div id="stickProductGrid" class="product-grid"></div>
+          </section>
+        </section>
+
+        <section class="result-section">
+          <h3>회원님의 선택</h3>
+          <div id="choiceSummary" class="choice-summary"></div>
+        </section>
+
+        <div class="result-actions">
+          <button id="staffButton" class="primary-button" type="button">직원에게 화면 보여주기</button>
+          <button id="crossRecommendButton" class="secondary-button" type="button"></button>
+          <button id="restartButton" class="text-button" type="button">처음부터 다시 선택하기</button>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <div id="passwordModal" class="modal" hidden>
+    <div class="modal-backdrop" data-close-password></div>
+    <section class="modal-sheet modal-sheet--small" role="dialog" aria-modal="true" aria-labelledby="passwordTitle">
+      <button id="passwordClose" class="modal-close" type="button">×</button>
+      <div class="lock-icon">⌁</div>
+      <p class="eyebrow">STAFF ONLY</p>
+      <h2 id="passwordTitle">직원 비밀번호를 입력해 주세요.</h2>
+      <form id="passwordForm">
+        <input id="passwordInput" type="password" inputmode="numeric" maxlength="4" placeholder="4자리 숫자" autocomplete="off">
+        <p id="passwordError" class="inline-error" hidden>비밀번호가 올바르지 않습니다.</p>
+        <button class="primary-button" type="submit">직원 화면 열기</button>
       </form>
     </section>
   </div>
 
-  <div id="staffModeModal" class="staff-mode-modal" hidden>
-    <div class="staff-mode-modal__backdrop" data-close-staff></div>
-    <section class="staff-mode-modal__sheet" role="dialog" aria-modal="true" aria-labelledby="staffModeTitle">
-      <div class="staff-mode-header">
-        <div><span class="staff-mode-label">STAFF MODE</span><h2 id="staffModeTitle">상담 준비 완료</h2></div>
-        <button id="staffModeCloseButton" class="staff-mode-close" type="button" aria-label="닫기">×</button>
-      </div>
-      <p class="staff-mode-intro">추천 결과와 고객님의 선택을 확인하고 바로 상담을 이어가세요.</p>
-      <div id="staffModeRecommendation" class="staff-mode-recommendation"></div>
-      <section class="staff-mode-section"><h3>고객님의 선택</h3><div id="staffModeChoices" class="staff-mode-choice-list"></div></section>
-      <section class="staff-mode-section"><h3>상담 포인트</h3><div id="staffModePoints" class="staff-mode-point-list"></div></section>
-      <section class="staff-mode-section staff-script-section">
-        <h3>추천 멘트</h3>
-        <p id="staffModeScript"></p>
-      </section>
-      <section class="staff-mode-section staff-compare-section">
-        <h3>비교 제안</h3>
-        <p id="staffModeCompareScript"></p>
-      </section>
-      <button id="staffModeDoneButton" class="primary-button" type="button">상담 시작하기</button>
+  <div id="staffModal" class="modal" hidden>
+    <div class="modal-backdrop" data-close-staff></div>
+    <section class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="staffTitle">
+      <header class="modal-header">
+        <div><p class="eyebrow">STAFF MODE</p><h2 id="staffTitle">상담 준비 완료</h2></div>
+        <button id="staffClose" class="modal-close" type="button">×</button>
+      </header>
+      <div id="staffRecommendation" class="staff-recommendation"></div>
+      <section class="staff-section"><h3>고객 선택</h3><div id="staffChoices"></div></section>
+      <section class="staff-section"><h3>상담 포인트</h3><div id="staffPoints" class="staff-points"></div></section>
+      <section class="staff-section"><h3>상담 멘트</h3><p id="staffScript" class="staff-script"></p></section>
+      <button id="staffDone" class="primary-button" type="button">상담 화면 닫기</button>
     </section>
   </div>
 
-
-  <div id="analyticsPasswordModal" class="analytics-password-modal" hidden>
-    <div class="analytics-modal-backdrop" data-close-analytics-password></div>
-    <section class="analytics-password-sheet" role="dialog" aria-modal="true" aria-labelledby="analyticsPasswordTitle">
-      <button id="analyticsPasswordClose" class="analytics-close-button" type="button" aria-label="닫기">×</button>
-      <div class="analytics-lock-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24">
-          <rect x="5" y="10" width="14" height="11" rx="3"></rect>
-          <path d="M8 10V7a4 4 0 018 0v3"></path>
-          <path d="M12 15v2"></path>
-        </svg>
-      </div>
-      <p class="analytics-eyebrow">ANALYTICS MODE</p>
-      <h2 id="analyticsPasswordTitle">관리자 비밀번호를 입력해 주세요.</h2>
-      <p class="analytics-description">이 기기에서 진행된 설문 결과를 확인합니다.</p>
-      <form id="analyticsPasswordForm" class="analytics-password-form" novalidate>
-        <label for="analyticsPasswordInput">비밀번호</label>
-        <input id="analyticsPasswordInput" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="4자리 숫자">
-        <p id="analyticsPasswordError" class="analytics-password-error" hidden>비밀번호가 올바르지 않습니다.</p>
+  <div id="analyticsPasswordModal" class="modal" hidden>
+    <div class="modal-backdrop" data-close-analytics-password></div>
+    <section class="modal-sheet modal-sheet--small" role="dialog" aria-modal="true">
+      <button id="analyticsPasswordClose" class="modal-close" type="button">×</button>
+      <div class="lock-icon">⌁</div>
+      <p class="eyebrow">ANALYTICS MODE</p>
+      <h2>관리자 비밀번호를 입력해 주세요.</h2>
+      <form id="analyticsPasswordForm">
+        <input id="analyticsPasswordInput" type="password" inputmode="numeric" maxlength="4" placeholder="4자리 숫자" autocomplete="off">
+        <p id="analyticsPasswordError" class="inline-error" hidden>비밀번호가 올바르지 않습니다.</p>
         <button class="primary-button" type="submit">분석 화면 열기</button>
       </form>
     </section>
   </div>
 
-  <div id="analyticsDashboardModal" class="analytics-dashboard-modal" hidden>
-    <div class="analytics-modal-backdrop" data-close-analytics-dashboard></div>
-    <section class="analytics-dashboard-sheet" role="dialog" aria-modal="true" aria-labelledby="analyticsDashboardTitle">
-      <header class="analytics-dashboard-header">
-        <div>
-          <p>LOCAL DEVICE ANALYTICS</p>
-          <h2 id="analyticsDashboardTitle">설문 분석 대시보드</h2>
-          <span>현재 기기에 저장된 결과만 집계됩니다.</span>
-        </div>
-        <button id="analyticsDashboardClose" class="analytics-close-button" type="button" aria-label="닫기">×</button>
+  <div id="analyticsModal" class="modal" hidden>
+    <div class="modal-backdrop" data-close-analytics></div>
+    <section class="modal-sheet analytics-sheet" role="dialog" aria-modal="true">
+      <header class="modal-header">
+        <div><p class="eyebrow">LOCAL DEVICE ANALYTICS</p><h2>설문 분석 대시보드</h2><small>현재 브라우저에 저장된 결과만 집계됩니다.</small></div>
+        <button id="analyticsClose" class="modal-close" type="button">×</button>
       </header>
 
-      <section class="analytics-summary-grid">
-        <article class="analytics-summary-card analytics-summary-card--primary">
-          <span>총 참여</span>
-          <strong id="analyticsTotalCount">0</strong>
-          <small>완료된 추천 수</small>
-        </article>
-        <article class="analytics-summary-card">
-          <span>기기 추천</span>
-          <strong id="analyticsDeviceCount">0</strong>
-          <small id="analyticsDeviceRate">0%</small>
-        </article>
-        <article class="analytics-summary-card">
-          <span>스틱 추천</span>
-          <strong id="analyticsStickCount">0</strong>
-          <small id="analyticsStickRate">0%</small>
-        </article>
-      </section>
-
-      <section class="analytics-panel">
-        <div class="analytics-panel-title">
-          <h3>추천 기기</h3>
-          <span>기기 추천 완료 기준</span>
-        </div>
-        <div id="analyticsDeviceBars" class="analytics-bar-list"></div>
-      </section>
-
-      <section class="analytics-panel">
-        <div class="analytics-panel-title">
-          <h3>인기 선택</h3>
-          <span>가장 많이 선택된 항목</span>
-        </div>
-        <div class="analytics-ranking-list">
-          <div><span>현재 사용 제품</span><strong id="analyticsTopCurrent">데이터 없음</strong></div>
-          <div><span>선호 맛</span><strong id="analyticsTopFlavor">데이터 없음</strong></div>
-          <div><span>추천 스틱</span><strong id="analyticsTopStick">데이터 없음</strong></div>
-        </div>
-      </section>
-
-      <section class="analytics-panel">
-        <div class="analytics-panel-title">
-          <h3>운영 현황</h3>
-          <span>상담 연결 데이터</span>
-        </div>
-        <div class="analytics-ranking-list">
-          <div><span>직원 화면 열기</span><strong id="analyticsStaffOpenCount">0회</strong></div>
-          <div><span>최근 완료</span><strong id="analyticsLastCompleted">기록 없음</strong></div>
-        </div>
-      </section>
-
-      <div class="analytics-actions">
-        <button id="analyticsCsvButton" class="primary-button" type="button">CSV 다운로드</button>
-        <button id="analyticsResetButton" class="secondary-button analytics-reset-button" type="button">오늘 데이터 초기화</button>
+      <div class="analytics-kpis">
+        <article><span>총 참여</span><strong id="totalCount">0</strong><small>완료 건수</small></article>
+        <article><span>기기 추천</span><strong id="deviceCount">0</strong><small id="deviceRate">0%</small></article>
+        <article><span>스틱 추천</span><strong id="stickCount">0</strong><small id="stickRate">0%</small></article>
       </div>
 
-      <p class="analytics-note">
-        GitHub Pages 단독 버전이므로 다른 휴대폰이나 태블릿의 결과와 자동으로 합쳐지지 않습니다.
-      </p>
+      <section class="analytics-panel"><h3>성별</h3><div id="genderStats" class="bar-list"></div></section>
+      <section class="analytics-panel"><h3>연령대</h3><div id="ageStats" class="bar-list"></div></section>
+      <section class="analytics-panel"><h3>현재 사용 제품</h3><div id="currentStats" class="bar-list"></div></section>
+      <section class="analytics-panel"><h3>선택 현황</h3>
+        <div class="ranking-list">
+          <div><span>가장 많이 선택한 기기 기준</span><strong id="topPriority">데이터 없음</strong></div>
+          <div><span>가장 많이 선택한 사용감</span><strong id="topSensation">데이터 없음</strong></div>
+          <div><span>가장 많이 선택한 스틱 계열</span><strong id="topCategory">데이터 없음</strong></div>
+          <div><span>가장 많이 안내된 스틱</span><strong id="topStick">데이터 없음</strong></div>
+          <div><span>직원 화면 실행</span><strong id="staffOpenCount">0회</strong></div>
+        </div>
+      </section>
+      <div class="analytics-actions">
+        <button id="csvButton" class="primary-button" type="button">CSV 다운로드</button>
+        <button id="resetDataButton" class="secondary-button danger-button" type="button">저장 데이터 초기화</button>
+      </div>
     </section>
   </div>
 
+  <script src="script.js"></script>
 </body>
 </html>
