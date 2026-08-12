@@ -113,3 +113,10 @@
 - 에임 리믹스 이미지 제거
 - 두 제품 모두 `이미지 준비중` 플레이스홀더로 표시
 - 공식 이미지 확보 후 교체 예정
+
+
+## V6.4 entry gate
+- Site entry adult access screen added.
+- Entry code: `0000`
+- Verification is kept for the current browser tab/session using `sessionStorage`.
+- Existing staff/admin passwords and recommendation logic are unchanged.

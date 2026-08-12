@@ -19,6 +19,52 @@
   const state = { mode:null, answers:{}, history:[], current:null, result:null };
   const STORAGE_KEY = "findMyLilAbleFocusAnalyticsV1";
 
+  // Site entry gate — simple on-device access control for the static GitHub Pages site.
+  // Note: because this is a static site, the code is not a substitute for server-side authentication.
+  const ENTRY_CODE = "0000";
+  const ENTRY_SESSION_KEY = "findMyLilAdultEntryVerifiedV1";
+
+  function unlockEntryGate() {
+    const gate = $("entryGate");
+    if (gate) gate.hidden = true;
+    document.body.classList.remove("entry-locked");
+  }
+
+  function initEntryGate() {
+    const gate = $("entryGate");
+    const form = $("entryGateForm");
+    const input = $("entryGateInput");
+    const error = $("entryGateError");
+    if (!gate || !form || !input || !error) return;
+
+    if (sessionStorage.getItem(ENTRY_SESSION_KEY) === "1") {
+      unlockEntryGate();
+      return;
+    }
+
+    document.body.classList.add("entry-locked");
+    gate.hidden = false;
+    setTimeout(() => input.focus(), 80);
+
+    input.addEventListener("input", e => {
+      e.target.value = e.target.value.replace(/\D/g, "").slice(0, 4);
+      error.hidden = true;
+    });
+
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      if (input.value !== ENTRY_CODE) {
+        error.hidden = false;
+        input.select();
+        return;
+      }
+      sessionStorage.setItem(ENTRY_SESSION_KEY, "1");
+      unlockEntryGate();
+    });
+  }
+
+  initEntryGate();
+
   const icons = {
     gender:"user",
     age:"calendar",

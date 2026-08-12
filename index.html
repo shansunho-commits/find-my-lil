@@ -7,7 +7,23 @@
   <title>Find My LIL</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="entry-locked">
+
+  <div id="entryGate" class="entry-gate" role="dialog" aria-modal="true" aria-labelledby="entryGateTitle">
+    <div class="entry-gate__card">
+      <div class="entry-gate__badge">19+</div>
+      <p class="eyebrow">ADULT ACCESS</p>
+      <h1 id="entryGateTitle">성인 인증</h1>
+      <p class="entry-gate__copy">본 서비스는 만 19세 이상 성인을 대상으로 합니다.<br>서비스 이용을 위해 인증번호를 입력해 주세요.</p>
+      <form id="entryGateForm" class="entry-gate__form">
+        <label class="entry-gate__label" for="entryGateInput">인증번호</label>
+        <input id="entryGateInput" type="password" inputmode="numeric" maxlength="4" placeholder="4자리 숫자" autocomplete="off" aria-describedby="entryGateError">
+        <p id="entryGateError" class="inline-error" hidden>인증번호가 올바르지 않습니다. 다시 확인해 주세요.</p>
+        <button class="primary-button" type="submit">확인</button>
+      </form>
+      <p class="entry-gate__notice">인증 후 Find My LIL 서비스를 이용할 수 있습니다.</p>
+    </div>
+  </div>
   <main class="app-shell">
     <header class="app-header">
       <button id="homeButton" class="brand-button" type="button" aria-label="처음 화면으로 이동">
