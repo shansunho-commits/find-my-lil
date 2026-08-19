@@ -120,3 +120,20 @@
 - Entry code: `0000`
 - Verification is kept for the current browser tab/session using `sessionStorage`.
 - Existing staff/admin passwords and recommendation logic are unchanged.
+
+
+## V6.5 이미지 교체
+
+- 사용자 제공 제품 안내 이미지 기준으로 추천 결과용 제품 이미지를 전면 교체
+- 제품 설명표/배경은 제외하고 제품 패키지 이미지만 사용
+- 에임 리믹스 / 에임 아이스팟 실제 이미지 반영
+- V6.4 성인 인증 게이트(인증번호 0000), 직원모드, 분석모드 및 추천 로직 유지
+
+- v6.5.3: 레임 아이스 이미지를 사용자가 지정한 정확한 크롭본으로 교체
+
+
+## v6.6 이미지 교체
+- 사용자가 제공한 원본 제품 이미지를 그대로 적용
+- 기존 추천 로직/성인 인증/직원 모드/분석 모드는 변경하지 않음
+- 추천 카드의 이미지 표시 영역을 동일 크기로 통일(object-fit: contain)
+- 에임 리믹스/아이스팟은 기존 사용자 제공 이미지 유지

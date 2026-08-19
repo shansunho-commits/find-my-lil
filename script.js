@@ -140,7 +140,7 @@
 
   const products = {
     "에임 아이스피크":{image:"images/aim-ice-peak.png"},
-    "에임 아이스팟":{image:null},
+    "에임 아이스팟":{image:"images/aim-ice-spot.jpg"},
     "에임 아이스노우":{image:"images/aim-ice-snow.png"},
     "레임 아이스":{image:"images/raim-ice.png"},
     "레임 아이스미드":{image:"images/raim-ice-mid.png"},
@@ -148,7 +148,7 @@
     "에임 탱고":{image:"images/aim-tango.png"},
     "에임 트와이스":{image:"images/aim-twice.png"},
     "에임 블루밍":{image:"images/aim-blooming.png"},
-    "에임 리믹스":{image:null},
+    "에임 리믹스":{image:"images/aim-remix.png"},
     "에임 시가리쉬":{image:"images/aim-cigarish.png"},
     "에임 까메오":{image:"images/aim-cameo.png"},
     "레임 레귤러":{image:"images/raim-regular.png"}
