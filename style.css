@@ -850,3 +850,50 @@ body::before{position:fixed;z-index:-1;inset:0;pointer-events:none;content:"";ba
   .guide-header--static h2{font-size:18px}
   .guide-static-image{max-height:calc(90vh - 72px)}
 }
+
+
+/* ===== V7.3.1 larger product guide ===== */
+.guide-sheet--static{
+  width:min(99vw,1580px);
+  max-width:1580px;
+  max-height:98vh;
+  padding:10px;
+  border-radius:22px;
+  background:#070811;
+}
+.guide-header--static{
+  min-height:42px;
+  margin-bottom:6px;
+  padding:0 4px;
+}
+.guide-header--static .eyebrow{font-size:9px}
+.guide-header--static h2{font-size:18px;line-height:1.15}
+.guide-static-image-wrap{
+  width:100%;
+  border-radius:14px;
+  background:#03040a;
+}
+.guide-static-image{
+  width:100%;
+  height:auto;
+  max-height:calc(98vh - 58px);
+  object-fit:contain;
+}
+@media(max-width:700px){
+  .guide-sheet--static{
+    width:calc(100vw - 4px);
+    max-width:none;
+    max-height:98vh;
+    padding:5px;
+    border-radius:14px;
+  }
+  .guide-header--static{
+    min-height:34px;
+    margin-bottom:3px;
+    padding:0 2px;
+  }
+  .guide-header--static .eyebrow{display:none}
+  .guide-header--static h2{font-size:14px}
+  .guide-static-image-wrap{border-radius:10px}
+  .guide-static-image{max-height:calc(98vh - 42px)}
+}
