@@ -13,11 +13,14 @@
     resultTitle:$("resultTitle"), resultSubtitle:$("resultSubtitle"), deviceResult:$("deviceResult"), stickResult:$("stickResult"),
     deviceReasonList:$("deviceReasonList"), stickProductGrid:$("stickProductGrid"), choiceSummary:$("choiceSummary"),
     staffButton:$("staffButton"), crossRecommendButton:$("crossRecommendButton"), restartButton:$("restartButton"),
-    analyticsTrigger:$("analyticsTrigger")
+    analyticsTrigger:$("analyticsTrigger"),
+    deviceResultImage:$("deviceResultImage"), deviceResultBadge:$("deviceResultBadge"), deviceResultName:$("deviceResultName"), deviceResultCopy:$("deviceResultCopy"), devicePromoPrice:$("devicePromoPrice"),
+    productGuideOpen:$("productGuideOpen"), productGuideModal:$("productGuideModal"), guideClose:$("guideClose")
   };
 
   const state = { mode:null, answers:{}, history:[], current:null, result:null };
   const STORAGE_KEY = "findMyLilAbleFocusAnalyticsV1";
+  const DEVICE_NAME = "릴 토니노 람보르기니";
 
   // Site entry gate — simple on-device access control for the static GitHub Pages site.
   // Note: because this is a static site, the code is not a substitute for server-side authentication.
@@ -138,7 +141,14 @@
     mentholStyle:{strong:"강한 멘솔",soft:"부드러운 멘솔",satisfying:"타격감 있는 멘솔"}
   };
 
-  const products = {
+  let products = {
+    "릴 에이블 3.0":{image:"images/lil-able-3.webp",type:"device",status:"판매중"},
+    "릴 토니노 람보르기니":{image:"images/device-result-v73.png",type:"device",status:"NEW",price:110000,promoPrice:49000,note:"얼리버드 특별가"},
+    "나우 블루":{image:"images/nau-blue.jpg",type:"stick",descriptor:"정통멘솔",status:"NEW"},
+    "나우 러스트":{image:"images/nau-rust.jpg",type:"stick",descriptor:"일반 담배맛",status:"NEW"},
+    "나우 체인지":{image:"images/nau-change.jpg",type:"stick",descriptor:"일반 담배맛 → 스윗민트",status:"NEW"},
+    "나우 옐로우":{image:"images/nau-yellow.jpg",type:"stick",descriptor:"블랙티 → 레몬라임",status:"NEW"},
+    "나우 코랄":{image:"images/nau-coral.jpg",type:"stick",descriptor:"중멘솔 → 애플피치",status:"NEW"},
     "에임 아이스피크":{image:"images/aim-ice-peak.png"},
     "에임 아이스팟":{image:"images/aim-ice-spot.jpg"},
     "에임 아이스노우":{image:"images/aim-ice-snow.png"},
@@ -153,6 +163,12 @@
     "에임 까메오":{image:"images/aim-cameo.png"},
     "레임 레귤러":{image:"images/raim-regular.png"}
   };
+
+  // V7.0 product catalog: future product updates can be made in products.json.
+  fetch("products.json")
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(list => { products = Object.fromEntries(list.map(item => [item.name, item])); })
+    .catch(() => { /* file:// test mode uses the fallback catalog above */ });
 
   function iconSvg(name) {
     const paths = {
@@ -280,7 +296,7 @@
   function beginAnalysis(){
     els.backButton.hidden=true;
     const steps=state.mode==="device"
-      ? [["선택하신 내용을 확인하고 있습니다.","현재 제품과 상담 기준을 정리하고 있습니다.",28],["에이블 3.0 안내 포인트를 구성하고 있습니다.","고객님의 사용량과 선호 사용감을 확인하고 있습니다.",67],["결과를 준비하고 있습니다.","직원이 바로 상담할 수 있도록 내용을 정리하고 있습니다.",100]]
+      ? [["선택하신 내용을 확인하고 있습니다.","현재 제품과 상담 기준을 정리하고 있습니다.",28],["릴 토니노 람보르기니 안내 포인트를 구성하고 있습니다.","예열 3초, 메탈릭 디자인, 얼리버드 특별가를 함께 확인하고 있습니다.",67],["결과를 준비하고 있습니다.","정상가 110,000원에서 61,000원 할인된 49,000원 특별가 정보를 준비하고 있습니다.",100]]
       : [["선택하신 내용을 확인하고 있습니다.","현재 제품과 선택 계열을 정리하고 있습니다.",28],["릴 스틱 정보를 비교하고 있습니다.","선택하신 계열에 맞는 제품을 준비하고 있습니다.",67],["결과를 준비하고 있습니다.","안내 제품과 상담 정보를 정리하고 있습니다.",100]];
     show(els.analysisScreen); els.analysisBar.style.width="0%";
     const items=[...els.analysisChecklist.querySelectorAll("span")];
@@ -296,31 +312,39 @@
     next();
   }
 
-  function deviceReasons(){
-    const a=state.answers, reasons=[];
-    const current=labels.current[a.current];
-    reasons.push(`${current} 사용 고객을 위한 에이블 3.0 상담 안내`);
-    const map={
-      preheat:"빠른 사용 준비를 중요하게 선택하셨습니다.",
-      vapor:"풍부한 연무를 중요하게 선택하셨습니다.",
-      satisfaction:"담배와 비슷한 만족감을 중요하게 선택하셨습니다.",
-      simple:"간편한 사용 방식을 중요하게 선택하셨습니다.",
-      price:"가격과 행사 혜택을 중요하게 선택하셨습니다."
+  function deviceRecommendation(){
+    const a = state.answers;
+    const focusMap = {
+      preheat: "빠른 예열을 중요하게 선택하신 고객님께 특히 잘 맞는 프리미엄 신제품입니다.",
+      vapor: "풍부한 사용감을 중요하게 선택하신 고객님께 특히 잘 맞는 프리미엄 신제품입니다.",
+      satisfaction: "담배와 비슷한 만족감을 중요하게 선택하신 고객님께 특히 잘 맞는 프리미엄 신제품입니다.",
+      simple: "간편한 사용을 중요하게 선택하신 고객님께 특히 잘 맞는 프리미엄 신제품입니다.",
+      price: "가격 메리트를 중요하게 선택하신 고객님께 특히 잘 맞는 프리미엄 신제품입니다."
     };
-    reasons.push(map[a.priority]);
-    if(a.amount==="high") reasons.push("하루 사용량이 많아 충족감을 중심으로 안내할 수 있습니다.");
-    else reasons.push(`${labels.amount[a.amount]} 사용 패턴을 상담에 반영합니다.`);
-    reasons.push(`${labels.sensation[a.sensation]}을 선호하는 것으로 선택하셨습니다.`);
-    return reasons.slice(0,4);
+    return {
+      name:DEVICE_NAME,
+      image:"images/device-result-v73.png",
+      badge:"NEW 추천 기기",
+      copy:focusMap[a.priority] || "고객님의 선택 내용을 바탕으로 가장 먼저 추천드리는 프리미엄 신제품입니다.",
+      promoHtml:`<span class="promo-label">얼리버드 특별가</span><strong>49,000원</strong><small>정상가 <s>110,000원</s> · <b>61,000원 할인</b></small>`
+    };
+  }
+
+  function deviceReasons(){
+    return [
+      { title:"예열시간 단 3초", copy:"기다림 없이 빠르게 시작되는 스마트한 사용 경험", tone:"tone-speed" },
+      { title:"FLASHWAVE™ 히팅 테크놀로지", copy:"강력하고 균일한 가열로 더욱 풍부한 사용감을 구현", tone:"tone-heat" },
+      { title:"청소 ZERO", copy:"스틱만 교체하면 되어 복잡한 청소 부담을 줄여주는 간편한 관리", tone:"tone-clean" }
+    ];
   }
 
   function stickProducts(){
     const a=state.answers;
-    if(a.category==="scent") return ["에임 트와이스","에임 블루밍","에임 리믹스"];
-    if(a.category==="original") return ["에임 시가리쉬","에임 까메오","레임 레귤러"];
-    if(a.mentholStyle==="soft") return ["레임 아이스미드","에임 쿨샷","에임 탱고"];
-    if(a.mentholStyle==="satisfying") return ["레임 아이스","에임 아이스피크","에임 쿨샷"];
-    return ["에임 아이스피크","에임 아이스팟","레임 아이스"];
+    if(a.category==="scent") return ["나우 옐로우","나우 코랄","에임 블루밍"];
+    if(a.category==="original") return ["나우 러스트","나우 체인지","레임 레귤러"];
+    if(a.mentholStyle==="soft") return ["나우 코랄","나우 체인지","레임 아이스미드"];
+    if(a.mentholStyle==="satisfying") return ["나우 블루","나우 코랄","에임 아이스피크"];
+    return ["나우 블루","나우 체인지","에임 아이스피크"];
   }
 
   function summaryRows(){
@@ -339,16 +363,24 @@
     const rows=summaryRows();
     els.choiceSummary.innerHTML=rows.map(([l,v])=>`<div class="choice-row"><span>${l}</span><strong>${v}</strong></div>`).join("");
     if(state.mode==="device"){
-      state.result={type:"device",name:"릴 에이블 3.0",products:["릴 에이블 3.0"]};
+      const rec=deviceRecommendation();
+      state.result={type:"device",name:rec.name,products:[rec.name]};
       els.deviceResult.hidden=false; els.stickResult.hidden=true;
+      const resultHeading=document.querySelector(".result-heading");
+      if(resultHeading) resultHeading.hidden=true;
       els.resultTitle.textContent="회원님께 추천드리는 릴 기기";
-      els.resultSubtitle.textContent="선택하신 답변을 바탕으로 에이블 3.0 상담 정보를 준비했습니다.";
-      els.deviceReasonList.innerHTML=deviceReasons().map(x=>`<div class="reason-item">✓ ${x}</div>`).join("");
+      els.resultSubtitle.textContent=`선택하신 답변을 바탕으로 ${rec.name} 상담 정보를 준비했습니다.`;
+      els.deviceResultImage.src=rec.image; els.deviceResultImage.alt=rec.name;
+      els.deviceResultBadge.textContent=rec.badge; els.deviceResultName.textContent=rec.name; els.deviceResultCopy.textContent=rec.copy;
+      if(rec.promoHtml){els.devicePromoPrice.hidden=false;els.devicePromoPrice.innerHTML=rec.promoHtml}else{els.devicePromoPrice.hidden=true;els.devicePromoPrice.innerHTML=""}
+      els.deviceReasonList.innerHTML=deviceReasons().map(item=>`<article class="reason-card ${item.tone}"><strong>${item.title}</strong><p>${item.copy}</p></article>`).join("");
       els.crossRecommendButton.textContent="나에게 맞는 릴 스틱도 찾아보기";
     }else{
       const list=stickProducts();
       state.result={type:"stick",name:list.join(", "),products:list};
       els.deviceResult.hidden=true; els.stickResult.hidden=false;
+      const resultHeading=document.querySelector(".result-heading");
+      if(resultHeading) resultHeading.hidden=false;
       els.resultTitle.textContent="회원님께 추천드리는 릴 스틱";
       els.resultSubtitle.textContent="회원님의 선택을 바탕으로 안내드리는 제품입니다.";
       els.stickProductGrid.innerHTML=list.map(name=>{
@@ -371,7 +403,7 @@
       gender:labels.gender[a.gender], age:labels.age[a.age], current:labels.current[a.current],
       priority:a.priority?labels.priority[a.priority]:"", amount:a.amount?labels.amount[a.amount]:"",
       sensation:a.sensation?labels.sensation[a.sensation]:"", category:a.category?labels.category[a.category]:"",
-      recommendation:state.mode==="device"?"릴 에이블 3.0":state.result.products.join("|")
+      recommendation:state.mode==="device"?state.result.name:state.result.products.join("|")
     });
     saveData(data);
   }
@@ -380,11 +412,21 @@
     const rows=summaryRows();
     if(state.mode==="device"){
       const points=deviceReasons();
-      return {title:"릴 에이블 3.0",sub:"추천 기기",rows,points,script:`“고객님은 ${labels.priority[state.answers.priority]}을 중요하게 선택하셨습니다. 에이블 3.0의 관련 특징과 현재 행사 혜택을 중심으로 안내드리겠습니다.”`};
+      const rec=deviceRecommendation();
+      return {title:rec.name,sub:rec.badge,rows,points,script:`“고객님은 ${labels.priority[state.answers.priority]}을 중요하게 선택하셨습니다. ${rec.name}의 관련 특징과 현재 특별가을 중심으로 안내드리겠습니다.”`};
     }
     const list=state.result.products;
     const category=labels.category[state.answers.category];
     return {title:list.join(" · "),sub:"추천 릴 스틱",rows,points:[`${category} 선택 고객`,`${list[0]}부터 제품 이미지를 보며 안내`, "제품별 가격과 세부 정보는 직원이 직접 설명"],script:`“고객님은 ${category}을 선택하셨습니다. 화면에 표시된 세 제품을 차례로 안내해 드리겠습니다.”`};
+  }
+
+  function openGuide(){
+    $("productGuideModal").hidden=false;
+    document.body.style.overflow="hidden";
+  }
+  function closeGuide(){
+    $("productGuideModal").hidden=true;
+    document.body.style.overflow="";
   }
 
   function openPassword(){
@@ -447,11 +489,17 @@
   els.questionBackButton.addEventListener("click",goBack);
   els.restartButton.addEventListener("click",reset);
   els.crossRecommendButton.addEventListener("click",()=>{state.mode=state.mode==="device"?"stick":"device";state.answers={};state.history=[];state.current="gender";state.result=null;els.backButton.hidden=false;renderQuestion()});
+  if(els.productGuideOpen){
+    els.productGuideOpen.addEventListener("click", openGuide);
+    els.productGuideOpen.addEventListener("keydown", e=>{ if(e.key==="Enter" || e.key===" "){ e.preventDefault(); openGuide(); } });
+  }
   els.staffButton.addEventListener("click",openPassword);
   $("passwordForm").addEventListener("submit",e=>{e.preventDefault();if($("passwordInput").value!=="1234"){$("passwordError").hidden=false;return}closePassword();openStaff()});
   $("passwordInput").addEventListener("input",e=>{e.target.value=e.target.value.replace(/\D/g,"").slice(0,4);$("passwordError").hidden=true});
   $("passwordClose").addEventListener("click",closePassword);document.querySelector("[data-close-password]").addEventListener("click",closePassword);
   $("staffClose").addEventListener("click",closeStaff);$("staffDone").addEventListener("click",closeStaff);document.querySelector("[data-close-staff]").addEventListener("click",closeStaff);
+  if($("guideClose")) $("guideClose").addEventListener("click",closeGuide);
+  const guideBackdrop=document.querySelector("[data-close-guide]"); if(guideBackdrop) guideBackdrop.addEventListener("click",closeGuide);
 
   let taps=0,timer;
   els.analyticsTrigger.addEventListener("click",()=>{taps++;clearTimeout(timer);timer=setTimeout(()=>taps=0,1400);if(taps>=5){taps=0;clearTimeout(timer);openAnalyticsPassword()}});
@@ -462,6 +510,6 @@
   $("csvButton").addEventListener("click",csv);
   $("resetDataButton").addEventListener("click",()=>{if(confirm("현재 브라우저에 저장된 데이터를 모두 삭제할까요?")){saveData({records:[],staffOpenCount:0});renderAnalytics()}});
   els.adultCheck.addEventListener("change",()=>els.adultError.hidden=true);
-  document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if(!$("analyticsModal").hidden)closeAnalytics();else if(!$("analyticsPasswordModal").hidden)closeAnalyticsPassword();else if(!$("staffModal").hidden)closeStaff();else if(!$("passwordModal").hidden)closePassword()});
+  document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if(!$("analyticsModal").hidden)closeAnalytics();else if(!$("analyticsPasswordModal").hidden)closeAnalyticsPassword();else if(!$("staffModal").hidden)closeStaff();else if($("productGuideModal") && !$("productGuideModal").hidden)closeGuide();else if(!$("passwordModal").hidden)closePassword()});
   reset();
 })();

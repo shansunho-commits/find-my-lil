@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#f3fbff">
+  <meta name="theme-color" content="#080713">
   <title>Find My LIL</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -28,16 +28,20 @@
     <header class="app-header">
       <button id="homeButton" class="brand-button" type="button" aria-label="처음 화면으로 이동">
         <span class="brand-mark">LIL</span>
-        <span>Find My LIL</span>
+        <span>Find My LIL <em class="version-badge">7.3</em></span>
       </button>
       <button id="backButton" class="back-button" type="button" hidden>이전</button>
     </header>
 
     <section id="startScreen" class="screen is-active">
       <div class="hero-card">
-        <p class="eyebrow">PERSONAL RECOMMENDATION EXPERIENCE</p>
+        <p class="eyebrow">PERSONAL RECOMMENDATION EXPERIENCE · V7.3</p>
         <h1>30초 만에<br>나에게 맞는 릴을<br>찾아보세요.</h1>
         <p class="hero-copy">간단한 질문을 통해 릴 기기와 스틱을 안내해 드립니다.</p>
+
+        <section id="productGuideOpen" class="new-product-spotlight new-product-spotlight--image is-clickable" aria-label="릴 토니노 람보르기니 제품 가이드 보기" role="button" tabindex="0" aria-controls="productGuideModal">
+          <img class="promo-banner-image" src="images/promo-banner-v73.png" alt="릴 토니노 람보르기니 얼리버드 특별가 49,000원, 제품 가이드 보기">
+        </section>
 
         <div class="start-grid">
           <button class="start-choice start-choice--device" data-start="device" type="button">
@@ -112,26 +116,23 @@
         </div>
 
         <section id="deviceResult" hidden>
-          <div class="device-product-card">
-            <div class="device-image-wrap">
-              <img src="images/lil-able-3.webp" alt="릴 에이블 3.0">
-            </div>
-            <div>
-              <span class="result-badge">추천 기기</span>
-              <h3>릴 에이블 3.0</h3>
-              <p>고객님의 선택 내용을 바탕으로 에이블 3.0을 안내드립니다.</p>
-            </div>
+          <div class="device-result-static">
+            <img src="images/device-result-v73.png" alt="릴 토니노 람보르기니 추천 결과: 49,000원 얼리버드 특별가와 핵심 추천 포인트">
           </div>
-          <section class="result-section">
-            <h3>추천 포인트</h3>
-            <div id="deviceReasonList" class="reason-list"></div>
-          </section>
+          <div class="device-result-script-hooks" aria-hidden="true">
+            <img id="deviceResultImage" src="images/device-result-v73.png" alt="">
+            <span id="deviceResultBadge"></span>
+            <span id="deviceResultName"></span>
+            <span id="deviceResultCopy"></span>
+            <div id="devicePromoPrice"></div>
+            <div id="deviceReasonList"></div>
+          </div>
         </section>
 
         <section id="stickResult" hidden>
           <section class="result-section">
             <h3>추천 릴 스틱</h3>
-            <p class="section-copy">순위 없이 함께 안내드리는 제품입니다.</p>
+            <p class="section-copy">신제품 NAU를 포함해 선택 취향에 맞는 제품을 함께 안내드립니다.</p>
             <div id="stickProductGrid" class="product-grid"></div>
           </section>
         </section>
@@ -177,6 +178,20 @@
       <section class="staff-section"><h3>상담 포인트</h3><div id="staffPoints" class="staff-points"></div></section>
       <section class="staff-section"><h3>상담 멘트</h3><p id="staffScript" class="staff-script"></p></section>
       <button id="staffDone" class="primary-button" type="button">상담 화면 닫기</button>
+    </section>
+  </div>
+
+
+  <div id="productGuideModal" class="modal" hidden>
+    <div class="modal-backdrop" data-close-guide></div>
+    <section class="modal-sheet guide-sheet guide-sheet--static" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
+      <header class="modal-header guide-header--static">
+        <div><p class="eyebrow">PRODUCT GUIDE</p><h2 id="guideTitle">릴 토니노 람보르기니 제품 안내</h2></div>
+        <button id="guideClose" class="modal-close" type="button">×</button>
+      </header>
+      <div class="guide-static-image-wrap">
+        <img class="guide-static-image" src="images/product-guide-v73.png" alt="릴 토니노 람보르기니 디바이스 제품 가이드">
+      </div>
     </section>
   </div>
 

@@ -1,0 +1,135 @@
+[
+  {
+    "name": "릴 에이블 3.0",
+    "type": "device",
+    "image": "images/lil-able-3.webp",
+    "status": "판매중"
+  },
+  {
+    "name": "릴 토니노 람보르기니",
+    "type": "device",
+    "image": "images/device-result-v73.png",
+    "status": "NEW",
+    "price": 110000,
+    "promoPrice": 49000,
+    "note": "얼리버드 특별가"
+  },
+  {
+    "name": "나우 블루",
+    "type": "stick",
+    "image": "images/nau-blue.jpg",
+    "category": "menthol",
+    "descriptor": "정통멘솔",
+    "status": "NEW"
+  },
+  {
+    "name": "나우 러스트",
+    "type": "stick",
+    "image": "images/nau-rust.jpg",
+    "category": "original",
+    "descriptor": "일반 담배맛",
+    "status": "NEW"
+  },
+  {
+    "name": "나우 체인지",
+    "type": "stick",
+    "image": "images/nau-change.jpg",
+    "category": "menthol",
+    "descriptor": "일반 담배맛 → 스윗민트",
+    "status": "NEW"
+  },
+  {
+    "name": "나우 옐로우",
+    "type": "stick",
+    "image": "images/nau-yellow.jpg",
+    "category": "scent",
+    "descriptor": "블랙티 → 레몬라임",
+    "status": "NEW"
+  },
+  {
+    "name": "나우 코랄",
+    "type": "stick",
+    "image": "images/nau-coral.jpg",
+    "category": "scent",
+    "descriptor": "중멘솔 → 애플피치",
+    "status": "NEW"
+  },
+  {
+    "name": "에임 아이스피크",
+    "type": "stick",
+    "image": "images/aim-ice-peak.png",
+    "status": "판매중"
+  },
+  {
+    "name": "에임 아이스팟",
+    "type": "stick",
+    "image": "images/aim-ice-spot.jpg",
+    "status": "판매중"
+  },
+  {
+    "name": "에임 아이스노우",
+    "type": "stick",
+    "image": "images/aim-ice-snow.png",
+    "status": "판매중"
+  },
+  {
+    "name": "레임 아이스",
+    "type": "stick",
+    "image": "images/raim-ice.png",
+    "status": "판매중"
+  },
+  {
+    "name": "레임 아이스미드",
+    "type": "stick",
+    "image": "images/raim-ice-mid.png",
+    "status": "판매중"
+  },
+  {
+    "name": "에임 쿨샷",
+    "type": "stick",
+    "image": "images/aim-cool-shot.png",
+    "status": "판매중"
+  },
+  {
+    "name": "에임 탱고",
+    "type": "stick",
+    "image": "images/aim-tango.png",
+    "status": "판매중"
+  },
+  {
+    "name": "에임 트와이스",
+    "type": "stick",
+    "image": "images/aim-twice.png",
+    "status": "판매중"
+  },
+  {
+    "name": "에임 블루밍",
+    "type": "stick",
+    "image": "images/aim-blooming.png",
+    "status": "판매중"
+  },
+  {
+    "name": "에임 리믹스",
+    "type": "stick",
+    "image": "images/aim-remix.png",
+    "status": "판매중"
+  },
+  {
+    "name": "에임 시가리쉬",
+    "type": "stick",
+    "image": "images/aim-cigarish.png",
+    "status": "판매중"
+  },
+  {
+    "name": "에임 까메오",
+    "type": "stick",
+    "image": "images/aim-cameo.png",
+    "status": "판매중"
+  },
+  {
+    "name": "레임 레귤러",
+    "type": "stick",
+    "image": "images/raim-regular.png",
+    "status": "판매중"
+  }
+]
